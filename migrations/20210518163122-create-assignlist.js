@@ -1,39 +1,37 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('assignlists', {
+    return queryInterface.createTable("assignlists", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       watching: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       done: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: "",
       },
       status: {
-        type: Sequelize.INTEGER
-      },
-      created_by: {
-        type: Sequelize.INTEGER
-      },
-      updated_by: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('assignlists');
-  }
+    return queryInterface.dropTable("assignlists");
+  },
 };
