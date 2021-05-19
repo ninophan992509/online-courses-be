@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   document.associate = function (models) {
     // associations can be defined here
-    // document.belongsTo(models.user);
-    // document.belongsTo(models.chapter);
+    document.belongsTo(models.user);
+    document.belongsTo(models.chapter);
   };
   return document;
 };

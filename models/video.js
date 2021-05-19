@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   video.associate = function (models) {
     // associations can be defined here
-    // video.belongsTo(models.user);
-    // video.belongsTo(models.chapter);
+    video.belongsTo(models.user);
+    video.belongsTo(models.chapter);
   };
   return video;
 };

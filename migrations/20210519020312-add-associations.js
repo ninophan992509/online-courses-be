@@ -184,7 +184,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "videos", // name of Source model
-              "chap_id", // name of the key we're adding
+              "chapter_id", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -214,6 +214,141 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "videos", // name of Source model
+              "updated_by", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "users", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "documents", // name of Source model
+              "chapter_id", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "chapters", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "documents", // name of Source model
+              "created_by", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "users", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "documents", // name of Source model
+              "updated_by", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "users", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "watchlists", // name of Source model
+              "course_id", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "courses", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "watchlists", // name of Source model
+              "created_by", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "users", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "watchlists", // name of Source model
+              "updated_by", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "users", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "assignlists", // name of Source model
+              "course_id", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "courses", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "assignlists", // name of Source model
+              "created_by", // name of the key we're adding
+              {
+                type: Sequelize.INTEGER,
+                references: {
+                  model: "users", // name of Target model
+                  key: "id", // key in Target model that we're referencing
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
+              }
+            )
+          )
+          .then(() =>
+            queryInterface.addColumn(
+              "assignlists", // name of Source model
               "updated_by", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
@@ -304,7 +439,7 @@ module.exports = {
       .then(() =>
         queryInterface.removeColumn(
           "videos", // name of Source model
-          "chap_id" // key we want to remove
+          "chapter_id" // key we want to remove
         )
       )
       .then(() =>
@@ -316,6 +451,60 @@ module.exports = {
       .then(() =>
         queryInterface.removeColumn(
           "videos", // name of Source model
+          "updated_by" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "documents", // name of Source model
+          "chapter_id" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "documents", // name of Source model
+          "created_by" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "documents", // name of Source model
+          "updated_by" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "watchlists", // name of Source model
+          "course_id" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "watchlists", // name of Source model
+          "created_by" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "watchlists", // name of Source model
+          "updated_by" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "assignlists", // name of Source model
+          "course_id" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "assignlists", // name of Source model
+          "created_by" // key we want to remove
+        )
+      )
+      .then(() =>
+        queryInterface.removeColumn(
+          "assignlists", // name of Source model
           "updated_by" // key we want to remove
         )
       );

@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
   );
   assignlist.associate = function (models) {
     // associations can be defined here
-    // assignlist.belongsTo(models.user);
-    // assignlist.belongsTo(models.course);
-    // assignlist.belongsTo(models.chapter);
+    assignlist.belongsTo(models.user);
+    assignlist.belongsTo(models.course);
+    assignlist.belongsTo(models.chapter);
   };
   return assignlist;
 };

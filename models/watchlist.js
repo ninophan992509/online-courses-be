@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   watchlist.associate = function (models) {
     // associations can be defined here
-    // watchlist.belongsTo(models.user);
-    // watchlist.belongsTo(models.course);
+    watchlist.belongsTo(models.user);
+    watchlist.belongsTo(models.course);
   };
   return watchlist;
 };
