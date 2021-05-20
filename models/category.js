@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   category.associate = function (models) {
     // associations can be defined here
-    chapter.belongsTo(models.user);
+    category.belongsTo(models.user);
   };
   return category;
 };
