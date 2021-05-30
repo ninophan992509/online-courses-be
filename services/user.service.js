@@ -38,7 +38,6 @@ exports.SignIn = async function(auth){
     user.refreshtoken = rfToken;
     await user.save();
     return {
-        authenticated : true,
         accessToken,
         rfToken
       };
