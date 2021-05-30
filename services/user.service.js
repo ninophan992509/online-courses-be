@@ -7,6 +7,7 @@ const db = require('../models');
 const User = require('../models/user')(db.sequelize, db.Sequelize.DataTypes);
 const USER_TYPE = require('../enums/user-type.enum');
 const USER_STATUS = require('../enums/user-status.enum');
+const Response = require('../response/response').Response;
 
 exports.Register = async function(user){
     const userWithSameUsername = await User.findOne({ where: { username: user.username } });
@@ -15,11 +16,11 @@ exports.Register = async function(user){
     }
     user.password = bcrypt.hashSync(user.password, 10);
     user.status = USER_STATUS.active;
-    user.type = USER_TYPE.user;
+    user.type = USER_TYPE.student;
     const result = await User.create(user);
     var val = result.dataValues;
     delete val.password;
-    return val;
+    return new Response(null, true, result);
 }
 
 exports.SignIn = async function(auth){
@@ -37,10 +38,17 @@ exports.SignIn = async function(auth){
     var rfToken = randomstring.generate(50);
     user.refreshtoken = rfToken;
     await user.save();
-    return {
+    const userInfo = user.toJSON();
+    delete userInfo.password;
+    delete userInfo.refreshtoken;
+    delete userInfo.createdAt;
+    delete userInfo.updatedAt;
+    const result = {
+        userInfo,
         accessToken,
         rfToken
       };
+    return new Response(null, true, result);
 }
 
 exports.CreateAccessToken = async function(token){
@@ -60,7 +68,8 @@ exports.CreateAccessToken = async function(token){
       expiresIn: 10
     }
     var newAccessToken = jwt.sign(payload,SECRET_KEY, opts);
-    return{
+    const result = {
         accessToken: newAccessToken
     };
+    return new Response(null, true, result);
 }
