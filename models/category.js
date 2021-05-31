@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       cat_name: DataTypes.STRING,
       status: DataTypes.INTEGER,
+      number_assigned: DataTypes.INTEGER,
+      created_by: DataTypes.INTEGER,
+      updated_by: DataTypes.INTEGER
     },
     {}
   );

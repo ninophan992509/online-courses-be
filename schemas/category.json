@@ -1,0 +1,20 @@
+{
+    "required": [
+        "cat_name"
+    ],
+    "additionalProperties": true,
+    "properties": {
+        "cat_name": {
+            "type": "string"
+        },
+        "status": {
+            "type": "integer"
+        },
+        "created_by": {
+            "type": "integer"
+        },
+        "updated_by": {
+            "type": "integer"
+        }
+    }
+}

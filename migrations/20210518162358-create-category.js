@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      number_assigned: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
       status: {
         type: Sequelize.INTEGER,
         allowNull: false,
