@@ -3,10 +3,10 @@ const SECRET_KEY = require('../config/config.json').SECRET_KEY;
 //const userModel = require('../models/user.model');
 const USER_TYPE = require('../enums/user-type.enum');
 
-module.exports = function (req, res, next) {
+module.exports = (roles) => function (req, res, next) {
     var accessTokenPayload = req.accessTokenPayload;
 
-    if (accessTokenPayload.type !== USER_TYPE.admin) {
+    if (roles === undefined || !roles.includes(accessTokenPayload.type)) {
         return res.status(403).json({
             message: 'Permission denied'
         });
