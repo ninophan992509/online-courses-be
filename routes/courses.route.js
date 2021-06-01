@@ -104,4 +104,13 @@ router.get('/newest', async function (req, res, next) {
     }
 });
 
+router.get('/highlights', async function (req, res, next){
+    try{
+        const result = await courseService.getListHighlightCourses();
+        res.status(200).json(result);
+    }catch(error){
+        next(error);
+    }
+})
+
 module.exports = router;

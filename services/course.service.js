@@ -1,9 +1,9 @@
 const { ErrorHandler } = require('../exceptions/error');
 const db = require('../models');
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
-const Response = require('../response/response').Response;
+const {Response, PageResponse} = require('../response/response');
 const STATUS = require('../enums/status.enum');
-
+const {Op} = require('sequelize');
 /**
  * 
  * @param whereObject ex: { category_id: 1, status: STATUS.active }
@@ -51,4 +51,17 @@ exports.create = async function (course) {
 
 exports.update = async function (dbEntity, updateEntity) {
     return await dbEntity.update(updateEntity);
+}
+
+exports.getListHighlightCourses = async function(){
+    const result = await Courses.findAll({
+        where: {
+            createdAt: {
+                [Op.gt]: Date.now() - 7*24*3600*1000
+            }
+        },
+        limit: 4,
+        order: [['rating','DESC']]
+    })
+    return new Response(null,true,result);
 }
