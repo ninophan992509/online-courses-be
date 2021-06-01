@@ -1,0 +1,46 @@
+{
+    "required": [
+        "course_name",
+        "picture",
+        "tuition_fee",
+        "description",
+        "category_id"
+    ],
+    "additionalProperties": true,
+    "properties": {
+        "course_name": {
+            "type": "string"
+        },
+        "number_assigned": {
+            "type": "integer"
+        },
+        "rating": {
+            "type": "number"
+        },
+        "number_rating": {
+            "type": "integer"
+        },
+        "picture": {
+            "type": "string"
+        },
+        "tuition_fee": {
+            "type": "integer"
+        },
+        "sale": {
+            "type": "integer"
+        },
+        "description": {
+            "type": "string"
+        },
+        "category_id": {
+            "type": "integer"
+        },
+        "status": {
+            "enum": [
+                -1,
+                0,
+                1
+            ]
+        }
+    }
+}

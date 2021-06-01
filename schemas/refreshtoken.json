@@ -1,15 +1,15 @@
 {
     "required": [
-        "accessToken",  
+        "accessToken",
         "refreshToken"
     ],
     "additionalProperties": false,
     "properties": {
-        "accessToken":{
-            "type":"string"
+        "accessToken": {
+            "type": "string"
         },
         "refreshToken": {
             "type": "string"
         }
     }
-  }
+}

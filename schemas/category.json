@@ -8,13 +8,11 @@
             "type": "string"
         },
         "status": {
-            "type": "integer"
-        },
-        "created_by": {
-            "type": "integer"
-        },
-        "updated_by": {
-            "type": "integer"
+            "enum": [
+                -1,
+                0,
+                1
+            ]
         }
     }
 }

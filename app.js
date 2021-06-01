@@ -18,6 +18,8 @@ app.use('/api/auth', require('./routes/auth.route'));
 
 app.use('/api/categories', require('./routes/categories.route'));
 
+app.use('/api/courses', require('./routes/courses.route'));
+
 app.use((err, req, res, next) => {
   console.log(err);
   const rt = new Response(err.message, false, null);

@@ -4,17 +4,20 @@ const catSchema = require('../schemas/category.json');
 const catService = require('../services/category.service');
 const courseService = require('../services/course.service');
 const { ErrorHandler } = require('../exceptions/error');
+const { getPutSchema } = require('../utils');
 const STATUS = require('../enums/status.enum');
+const USER_TYPE = require('../enums/user-type.enum');
 
 router.post('/',
     require('../middlewares/auth.mdw'),
-    require('../middlewares/auth.admin.mdw'),
+    require('../middlewares/auth.roles.mdw')([USER_TYPE.admin]),
     require('../middlewares/validate.mdw')(catSchema),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
             const entity = req.body;
             entity.created_by = payload.userId;
+            entity.status = STATUS.active;
             const result = await catService.Create(entity);
             res.status(201).json(result);
         } catch (error) {
@@ -34,8 +37,8 @@ router.get('/', async function (req, res, next) {
 
 router.put('/',
     require('../middlewares/auth.mdw'),
-    require('../middlewares/auth.admin.mdw'),
-    require('../middlewares/validate.mdw')(catSchema),
+    require('../middlewares/auth.roles.mdw')([USER_TYPE.admin]),
+    require('../middlewares/validate.mdw')(getPutSchema(catSchema)),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
@@ -44,12 +47,9 @@ router.put('/',
             const entity = req.body;
             const id = entity.id;
 
-            if (typeof id !== "number") {
-                throw new ErrorHandler(400, "Bad request: invalid id");
-            }
             const dbEntity = await catService.findOne({ id, status: STATUS.active });
             if (!dbEntity) {
-                throw new ErrorHandler(400, "Bad request: non exist entity");
+                throw new ErrorHandler(404, "Not exist entity");
             }
             const result = await catService.update(dbEntity, {
                 cat_name: entity.cat_name,
@@ -64,7 +64,7 @@ router.put('/',
 
 router.delete('/:id',
     require('../middlewares/auth.mdw'),
-    require('../middlewares/auth.admin.mdw'),
+    require('../middlewares/auth.roles.mdw')([USER_TYPE.admin]),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
@@ -77,12 +77,12 @@ router.delete('/:id',
                 status: STATUS.active
             });
             if (existCourse !== null) {
-                throw new ErrorHandler(400, "Course existed");
+                throw new ErrorHandler(404, "Course existed");
             }
 
             const dbEntity = await catService.findOne({ id, status: STATUS.active });
             if (dbEntity === null) {
-                throw new ErrorHandler(400, "Category is not existed.");
+                throw new ErrorHandler(404, "Category is not existed.");
             }
 
             const result = await catService.update(dbEntity, {
