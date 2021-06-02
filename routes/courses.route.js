@@ -113,4 +113,12 @@ router.get('/highlights', async function (req, res, next){
     }
 })
 
+router.get('/most-views', async function (req, res, next){
+    try{
+        const result = await courseService.GetListMostViewsCourses();
+        res.status(200).json(result);
+    }catch(error){
+        next(error);
+    }
+});
 module.exports = router;

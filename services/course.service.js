@@ -3,7 +3,7 @@ const db = require('../models');
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
 const {Response, PageResponse} = require('../response/response');
 const STATUS = require('../enums/status.enum');
-const {Op} = require('sequelize');
+const {Op, QueryTypes} = require('sequelize');
 /**
  * 
  * @param whereObject ex: { category_id: 1, status: STATUS.active }
@@ -64,4 +64,11 @@ exports.getListHighlightCourses = async function(){
         order: [['rating','DESC']]
     })
     return new Response(null,true,result);
+}
+
+exports.GetListMostViewsCourses = async function(){
+    const result = await db.sequelize.query(
+        "select c.* from watchlists as w inner join courses as c on w.course_id = c.id group by course_id order by count(w.course_id) desc limit 2",
+        QueryTypes.SELECT);
+    return new Response(null,true,result[0]);
 }
