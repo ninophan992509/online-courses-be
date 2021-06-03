@@ -1,0 +1,36 @@
+{
+    "required": [
+        "title",
+        "content",
+        "rating",
+        "course_id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "content": {
+            "type": "string"
+        },
+        "rating": {
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5
+            ]
+        },
+        "course_id": {
+            "type": "integer"
+        },
+        "status": {
+            "enum": [
+                -1,
+                0,
+                1
+            ]
+        }
+    }
+}
