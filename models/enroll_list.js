@@ -1,7 +1,7 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const assignlist = sequelize.define(
-    "assignlist",
+  const enroll_list = sequelize.define(
+    "enroll_list",
     {
       course_id: DataTypes.INTEGER,
       watching: DataTypes.INTEGER,
@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  assignlist.associate = function (models) {
+  enroll_list.associate = function (models) {
     // associations can be defined here
-    assignlist.belongsTo(models.user);
-    assignlist.belongsTo(models.course);
-    assignlist.belongsTo(models.chapter);
+    enroll_list.belongsTo(models.user);
+    enroll_list.belongsTo(models.course);
+    enroll_list.belongsTo(models.chapter);
   };
-  return assignlist;
+  return enroll_list;
 };

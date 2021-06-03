@@ -1,7 +1,7 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const watchlist = sequelize.define(
-    "watchlist",
+  const watch_list = sequelize.define(
+    "watch_list",
     {
       course_id: DataTypes.INTEGER,
       status: DataTypes.INTEGER,
@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  watchlist.associate = function (models) {
+  watch_list.associate = function (models) {
     // associations can be defined here
-    watchlist.belongsTo(models.user);
-    watchlist.belongsTo(models.course);
+    watch_list.belongsTo(models.user);
+    watch_list.belongsTo(models.course);
   };
-  return watchlist;
+  return watch_list;
 };

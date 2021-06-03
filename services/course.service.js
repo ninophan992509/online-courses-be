@@ -43,7 +43,7 @@ exports.findAll = async function (page, limit, category_id) {
 
 
 exports.create = async function (course) {
-    return await Courses.create(course)
+    return await Courses.create(course);
 }
 
 exports.update = async function (dbEntity, updateEntity) {
@@ -51,7 +51,7 @@ exports.update = async function (dbEntity, updateEntity) {
 }
 
 exports.getListHighlightCourses = async function () {
-    const result = await Courses.findAll({
+    return await Courses.findAll({
         where: {
             createdAt: {
                 [Op.gt]: Date.now() - 7 * 24 * 3600 * 1000
@@ -59,13 +59,12 @@ exports.getListHighlightCourses = async function () {
         },
         limit: 4,
         order: [['rating', 'DESC']]
-    })
-    return new Response(null, true, result);
+    });
 }
 
 exports.GetListMostViewsCourses = async function () {
     const result = await db.sequelize.query(
-        "select c.* from watchlists as w inner join courses as c on w.course_id = c.id group by course_id order by count(w.course_id) desc limit 2",
+        "select c.* from watch_lists as w inner join courses as c on w.course_id = c.id group by course_id order by count(w.course_id) desc limit 2",
         QueryTypes.SELECT);
-    return new Response(null, true, result[0]);
+    return result[0];
 }

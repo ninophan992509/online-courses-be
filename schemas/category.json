@@ -2,7 +2,7 @@
     "required": [
         "category_name"
     ],
-    "additionalProperties": true,
+    "additionalProperties": false,
     "properties": {
         "category_name": {
             "type": "string"

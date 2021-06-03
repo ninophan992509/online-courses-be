@@ -3,6 +3,11 @@
 ALTER DATABASE `onlinecw_online-courses` CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
 
+### Generate migration file
+```
+sequelize migration:generate --name <fucking name>
+```
+
 # API
 ```
 localhost:3000/api/

@@ -29,7 +29,7 @@ router.post('/',
 router.get('/', async function (req, res, next) {
     try {
         const result = await catService.findAll();
-        res.status(result.length !== 0 ? 200 : 204).json(result);
+        res.status(result.rows.length !== 0 ? 200 : 204).json(result);
     } catch (error) {
         next(error);
     }
