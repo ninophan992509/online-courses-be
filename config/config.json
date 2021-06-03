@@ -2,9 +2,13 @@
   "development": {
     "username": "onlinecw_lmtoan",
     "database": "onlinecw_online-courses",
-    "password":"lmtoan123",
+    "password": "lmtoan123",
     "host": "103.97.125.247",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "charset": "utf8",
+      "collate": "utf8_general_ci"
+    }
   },
   "SECRET_KEY": "tHisIsAscReTkEy"
 }

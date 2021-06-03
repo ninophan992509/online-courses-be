@@ -1,10 +1,10 @@
 {
     "required": [
-        "cat_name"
+        "category_name"
     ],
     "additionalProperties": true,
     "properties": {
-        "cat_name": {
+        "category_name": {
             "type": "string"
         },
         "status": {

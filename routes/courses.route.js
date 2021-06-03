@@ -6,7 +6,7 @@ const courseService = require('../services/course.service');
 const { ErrorHandler } = require('../exceptions/error');
 const STATUS = require('../enums/status.enum');
 const USER_TYPE = require('../enums/user-type.enum');
-const { getPutSchema } = require('../utils');
+const { getPutSchema, getLimitQuery, getPageQuery, getCategoryQuery } = require('../utils');
 
 router.post('/',
     require('../middlewares/auth.mdw'),
@@ -30,14 +30,21 @@ router.post('/',
     }
 );
 
+// localhost:3000/api/courses?page=4&limit=10&category=3
 router.get('/', async function (req, res, next) {
     try {
-        const result = await courseService.findAll();
+        let { page, limit, category_id } = req.query;
+        page = getPageQuery(page);
+        limit = getLimitQuery(limit);
+        category_id = getCategoryQuery(category_id);
+        const result = await courseService.findAll(page, limit, category_id);
         res.status(result.length !== 0 ? 200 : 204).json(result);
     } catch (error) {
         next(error);
     }
 });
+
+//get by category
 
 router.put('/',
     require('../middlewares/auth.mdw'),
@@ -104,20 +111,20 @@ router.get('/newest', async function (req, res, next) {
     }
 });
 
-router.get('/highlights', async function (req, res, next){
-    try{
+router.get('/highlights', async function (req, res, next) {
+    try {
         const result = await courseService.getListHighlightCourses();
         res.status(200).json(result);
-    }catch(error){
+    } catch (error) {
         next(error);
     }
 })
 
-router.get('/most-views', async function (req, res, next){
-    try{
+router.get('/most-views', async function (req, res, next) {
+    try {
         const result = await courseService.GetListMostViewsCourses();
         res.status(200).json(result);
-    }catch(error){
+    } catch (error) {
         next(error);
     }
 });
