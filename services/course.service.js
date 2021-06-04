@@ -29,16 +29,61 @@ exports.findNewest = async function () {
 }
 
 
+exports.findMostEnrolled = async function () {
+    return await Courses.findAndCountAll({
+        where: {
+            status: STATUS.active
+        },
+        order: [
+            ['number_enrolled', 'DESC']
+        ],
+        limit: 10,
+        offset: 0,
+    });
+}
+
+
 exports.findAll = async function (page, limit, category_id) {
     const whereObj = { status: STATUS.active }
     if (category_id) {
         whereObj.category_id = category_id;
     }
-    return await Courses.findAndCountAll({
+    const result = await Courses.findAndCountAll({
         where: whereObj,
         limit,
         offset: page - 1,
     });
+    const extraData = await Promise.all([
+        exports.findNewest(),
+        exports.findMostEnrolled(),
+        exports.getListHighlightCourses(),
+    ]);
+    const check = {
+        isNew: Set(),
+        mostEnrolled: Set(),
+        highlight: Set(),
+    }
+    extraData[0].rows.forEach(x => { check.isNew.add(x.id); });
+    extraData[1].rows.forEach(x => { check.mostEnrolled.add(x.id); });
+    extraData[2].rows.forEach(x => { check.highlight.add(x.id); });
+    result.rows.forEach(x => {
+        if (check.isNew.has(x.id)) {
+            x.isNew = true;
+        } else {
+            x.isNew = false;
+        }
+        if (check.mostEnrolled.has(x.id)) {
+            x.mostEnrolled = true;
+        } else {
+            x.mostEnrolled = false;
+        }
+        if (check.highlight.has(x.id)) {
+            x.highlight = true;
+        } else {
+            x.highlight = false;
+        }
+    });
+    return result;
 }
 
 
@@ -57,7 +102,7 @@ exports.getListHighlightCourses = async function () {
                 [Op.gt]: Date.now() - 7 * 24 * 3600 * 1000
             }
         },
-        limit: 4,
+        limit: 10,
         order: [['rating', 'DESC']]
     });
 }

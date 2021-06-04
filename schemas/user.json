@@ -1,15 +1,11 @@
 {
   "required": [
-    "username",
     "password",
     "fullname",
     "email"
   ],
   "additionalProperties": false,
   "properties": {
-    "username": {
-      "type": "string"
-    },
     "password": {
       "type": "string"
     },
