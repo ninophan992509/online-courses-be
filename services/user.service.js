@@ -16,7 +16,7 @@ exports.Register = async function (user) {
     }
     user.password = bcrypt.hashSync(user.password, 10);
     user.status = USER_STATUS.active;
-    user.type = USER_TYPE.admin;
+    user.type = USER_TYPE.student;
     const result = await User.create(user);
     var val = result.dataValues;
     delete val.password;
