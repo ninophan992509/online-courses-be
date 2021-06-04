@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      number_assigned: {
+      number_enrolled: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },

@@ -5,7 +5,7 @@ ALTER DATABASE `onlinecw_online-courses` CHARACTER SET utf8 COLLATE utf8_general
 
 ### Generate migration file
 ```
-sequelize migration:generate --name <fucking name>
+sequelize migration:generate --name <name>
 ```
 
 # API
@@ -29,9 +29,9 @@ categories/
         "rows": [
             {
                 "id": 1,
-                "category_name": "JAVA SUCK",
+                "category_name": "JAVA",
                 "status": 1,
-                "number_assigned": 0,
+                "number_enrolled": 0,
                 "created_by": 1,
                 "updated_by": 1,
                 "createdAt": "2021-06-03T08:11:17.000Z",
@@ -82,7 +82,7 @@ categories/
         "id": 1,
         "category_name": "JAVA 8",
         "status": 1,
-        "number_assigned": 0,
+        "number_enrolled": 0,
         "created_by": 1,
         "updated_by": 1,
         "createdAt": "2021-06-03T08:11:17.000Z",

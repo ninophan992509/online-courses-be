@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       category_id: DataTypes.INTEGER,
       picture: DataTypes.TEXT,
       description: DataTypes.TEXT,
-      number_assigned: DataTypes.INTEGER,
+      number_enrolled: DataTypes.INTEGER,
       rating: DataTypes.FLOAT,
       number_rating: DataTypes.INTEGER,
       tuition_fee: DataTypes.BIGINT,
