@@ -28,8 +28,8 @@ router.post('/',
 
 router.get('/', async function (req, res, next) {
     try {
-        const result = await catService.GetAll();
-        res.status(200).json(result);
+        const result = await catService.findAll();
+        res.status(result.rows.length !== 0 ? 200 : 204).json(result);
     } catch (error) {
         next(error);
     }
@@ -52,7 +52,7 @@ router.put('/',
                 throw new ErrorHandler(404, "Not exist entity");
             }
             const result = await catService.update(dbEntity, {
-                cat_name: entity.cat_name,
+                category_name: entity.category_name,
                 updated_by: currentUser.userId
             });
             res.status(200).json(result);

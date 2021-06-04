@@ -20,6 +20,8 @@ app.use('/api/categories', require('./routes/categories.route'));
 
 app.use('/api/courses', require('./routes/courses.route'));
 
+app.use('/api/feedbacks', require('./routes/feedbacks.route'));
+
 app.use((err, req, res, next) => {
   console.log(err);
   const rt = new Response(err.message, false, null);

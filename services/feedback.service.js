@@ -1,6 +1,6 @@
 const { ErrorHandler } = require('../exceptions/error');
 const db = require('../models');
-const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
+const Feedbacks = require('../models/feedback')(db.sequelize, db.Sequelize.DataTypes);
 const { Response, PageResponse } = require('../response/response');
 const STATUS = require('../enums/status.enum');
 const { Op, QueryTypes, where } = require('sequelize');
@@ -10,13 +10,13 @@ const { Op, QueryTypes, where } = require('sequelize');
  * @returns 1 category entity
  */
 exports.findOne = async function (whereObject) {
-    return await Courses.findOne({
+    return await Feedbacks.findOne({
         where: whereObject
     });
 }
 
 exports.findNewest = async function () {
-    return await Courses.findAndCountAll({
+    return await Feedbacks.findAndCountAll({
         where: {
             status: STATUS.active
         },
@@ -29,12 +29,12 @@ exports.findNewest = async function () {
 }
 
 
-exports.findAll = async function (page, limit, category_id) {
+exports.findAll = async function (page, limit, course_id) {
     const whereObj = { status: STATUS.active }
-    if (category_id) {
-        whereObj.category_id = category_id;
+    if (course_id) {
+        whereObj.course_id = course_id;
     }
-    return await Courses.findAndCountAll({
+    return await Feedbacks.findAndCountAll({
         where: whereObj,
         limit,
         offset: page - 1,
@@ -42,29 +42,17 @@ exports.findAll = async function (page, limit, category_id) {
 }
 
 
-exports.create = async function (course) {
-    return await Courses.create(course);
+exports.create = async function (entity) {
+    return await Feedbacks.create(entity)
 }
 
 exports.update = async function (dbEntity, updateEntity) {
     return await dbEntity.update(updateEntity);
 }
 
-exports.getListHighlightCourses = async function () {
-    return await Courses.findAll({
-        where: {
-            createdAt: {
-                [Op.gt]: Date.now() - 7 * 24 * 3600 * 1000
-            }
-        },
-        limit: 4,
-        order: [['rating', 'DESC']]
-    });
-}
-
 exports.GetListMostViewsCourses = async function () {
     const result = await db.sequelize.query(
         "select c.* from watch_lists as w inner join courses as c on w.course_id = c.id group by course_id order by count(w.course_id) desc limit 2",
         QueryTypes.SELECT);
-    return result[0];
+    return new Response(null, true, result[0]);
 }

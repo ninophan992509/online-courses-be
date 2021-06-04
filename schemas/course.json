@@ -6,12 +6,12 @@
         "description",
         "category_id"
     ],
-    "additionalProperties": true,
+    "additionalProperties": false,
     "properties": {
         "course_name": {
             "type": "string"
         },
-        "number_assigned": {
+        "number_enrolled": {
             "type": "integer"
         },
         "rating": {

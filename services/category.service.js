@@ -9,14 +9,12 @@ const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes
 const STATUS = require('../enums/status.enum');
 const Response = require('../response/response').Response;
 
-exports.GetAll = async function () {
-    var result = await Categories.findAll({ where: { status: STATUS.active } });
-    if (result.length == 0) throw new ErrorHandler(204, "No content");
-    return new Response(null, true, result);
+exports.findAll = async function () {
+    return await Categories.findAndCountAll({ where: { status: STATUS.active } });
 }
 
 exports.Create = async function (entity) {
-    const duplicate = await Categories.findOne({ where: { cat_name: entity.cat_name } });
+    const duplicate = await Categories.findOne({ where: { category_name: entity.category_name } });
     if (duplicate !== null) {
         throw new ErrorHandler(400, "Category existed");
     }
@@ -24,12 +22,12 @@ exports.Create = async function (entity) {
     entity.status = STATUS.active
 
     const result = await Categories.create(entity);
-    return new Response(null, true, result);
+    return result;
 }
 
 /**
  * 
- * @param whereObject ex: {id: 1, cat_name: "Little cat"}
+ * @param whereObject ex: {id: 1, category_name: "Little cat"}
  * @returns 1 category entity
  */
 exports.findOne = async function (whereObject) {

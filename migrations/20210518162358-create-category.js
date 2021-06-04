@@ -8,11 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      cat_name: {
+      category_name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      number_assigned: {
+      number_enrolled: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },

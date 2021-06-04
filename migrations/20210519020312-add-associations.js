@@ -273,7 +273,7 @@ module.exports = {
           )
           .then(() =>
             queryInterface.addColumn(
-              "watchlists", // name of Source model
+              "watch_lists", // name of Source model
               "course_id", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
@@ -288,7 +288,7 @@ module.exports = {
           )
           .then(() =>
             queryInterface.addColumn(
-              "watchlists", // name of Source model
+              "watch_lists", // name of Source model
               "created_by", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
@@ -303,7 +303,7 @@ module.exports = {
           )
           .then(() =>
             queryInterface.addColumn(
-              "watchlists", // name of Source model
+              "watch_lists", // name of Source model
               "updated_by", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
@@ -318,7 +318,7 @@ module.exports = {
           )
           .then(() =>
             queryInterface.addColumn(
-              "assignlists", // name of Source model
+              "enroll_lists", // name of Source model
               "course_id", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
@@ -333,7 +333,7 @@ module.exports = {
           )
           .then(() =>
             queryInterface.addColumn(
-              "assignlists", // name of Source model
+              "enroll_lists", // name of Source model
               "created_by", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
@@ -348,7 +348,7 @@ module.exports = {
           )
           .then(() =>
             queryInterface.addColumn(
-              "assignlists", // name of Source model
+              "enroll_lists", // name of Source model
               "updated_by", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
@@ -474,37 +474,37 @@ module.exports = {
       )
       .then(() =>
         queryInterface.removeColumn(
-          "watchlists", // name of Source model
+          "watch_lists", // name of Source model
           "course_id" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
-          "watchlists", // name of Source model
+          "watch_lists", // name of Source model
           "created_by" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
-          "watchlists", // name of Source model
+          "watch_lists", // name of Source model
           "updated_by" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
-          "assignlists", // name of Source model
+          "enroll_lists", // name of Source model
           "course_id" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
-          "assignlists", // name of Source model
+          "enroll_lists", // name of Source model
           "created_by" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
-          "assignlists", // name of Source model
+          "enroll_lists", // name of Source model
           "updated_by" // key we want to remove
         )
       );

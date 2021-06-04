@@ -4,14 +4,18 @@ module.exports = (sequelize, DataTypes) => {
     "course",
     {
       course_name: DataTypes.STRING,
-      number_assigned: DataTypes.INTEGER,
+      category_id: DataTypes.INTEGER,
+      picture: DataTypes.TEXT,
+      description: DataTypes.TEXT,
+      number_enrolled: DataTypes.INTEGER,
       rating: DataTypes.FLOAT,
       number_rating: DataTypes.INTEGER,
-      picture: DataTypes.TEXT,
       tuition_fee: DataTypes.BIGINT,
       sale: DataTypes.FLOAT,
-      description: DataTypes.TEXT,
       status: DataTypes.INTEGER,
+      teacher_id: DataTypes.INTEGER,
+      created_by: DataTypes.INTEGER,
+      updated_by: DataTypes.INTEGER,
     },
     {}
   );
