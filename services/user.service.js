@@ -33,7 +33,7 @@ exports.SignIn = async function (auth) {
         type: user.type
     };
     const opts = {
-        expiresIn: 10
+        expiresIn: 60*60*1000
     }
     var accessToken = jwt.sign(payload, SECRET_KEY, opts);
     var rfToken = randomstring.generate(100);
@@ -66,7 +66,7 @@ exports.CreateAccessToken = async function (token) {
     delete payload.exp;
 
     const opts = {
-        expiresIn: 10
+        expiresIn: 60*60*1000
     }
     var newAccessToken = jwt.sign(payload, SECRET_KEY, opts);
     const result = {
