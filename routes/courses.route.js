@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const courseSchema = require('../schemas/course.json');
+const getQuerySchema = require('../schemas/getQuery');
 const catService = require('../services/category.service');
 const courseService = require('../services/course.service');
 const feedbackService = require('../services/feedback.service');
@@ -13,7 +14,6 @@ const {
     getLimitQuery,
     getPageQuery,
     getCategoryQuery,
-
 } = require('../utils');
 
 router.post('/',
@@ -24,9 +24,16 @@ router.post('/',
         try {
             const payload = req.accessTokenPayload;
             const entity = req.body;
-            entity.created_by = payload.userId;
+
+            if (entity.sale && entity.sale > entity.tuition_fee) {
+                throw new ErrorHandler(400, "Sale is not invalid.");
+            }
+
+            entity.createdBy = payload.userId;
             entity.status = STATUS.active;
-            const checkCategory = await catService.findOne({ id: entity.category_id, status: STATUS.active })
+            entity.number_enrolled = 0;
+            entity.sale = entity.sale ? entity.sale : 0;
+            const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active })
             if (checkCategory === null) {
                 throw new ErrorHandler(404, "Category is not existed.");
             }
@@ -38,19 +45,20 @@ router.post('/',
     }
 );
 
-// localhost:3000/api/courses?page=4&limit=10&category=3
-router.get('/', async function (req, res, next) {
-    try {
-        let { page, limit, category_id } = req.query;
-        page = getPageQuery(page);
-        limit = getLimitQuery(limit);
-        category_id = getCategoryQuery(category_id);
-        const result = await courseService.findAll(page, limit, category_id);
-        res.status(result.length !== 0 ? 200 : 204).json(new Response(null, true, result));
-    } catch (error) {
-        next(error);
-    }
-});
+router.get('/',
+    require('../middlewares/validateGetQuery.mdw')(getQuerySchema),
+    async function (req, res, next) {
+        try {
+            let { page, limit, categoryId } = req.query;
+            page = getPageQuery(page);
+            limit = getLimitQuery(limit);
+            categoryId = getCategoryQuery(categoryId);
+            const result = await courseService.findAll(page, limit, categoryId);
+            res.status(result.length !== 0 ? 200 : 204).json(new PageResponse(null, true, result, page, limit));
+        } catch (error) {
+            next(error);
+        }
+    });
 
 router.get('/newest', async function (req, res, next) {
     try {
@@ -72,7 +80,7 @@ router.get('/highlights', async function (req, res, next) {
 
 router.get('/most-views', async function (req, res, next) {
     try {
-        const result = await courseService.GetListMostViewsCourses();
+        const result = await courseService.getListMostViewsCourses();
         res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
@@ -110,7 +118,7 @@ router.get('/:id/feedbacks', async function (req, res, next) {
         page = getPageQuery(page);
         limit = getLimitQuery(limit);
         const result = await feedbackService.findAll(page, limit, id);
-        res.status(result.rows.length !== 0 ? 200 : 204).json(new Response(null, true, result));
+        res.status(result.rows.length !== 0 ? 200 : 204).json(new PageResponse(null, true, result, page, limit));
 
     } catch (error) {
         next(error);
@@ -118,7 +126,7 @@ router.get('/:id/feedbacks', async function (req, res, next) {
 });
 
 /**
- * Get courses by category_id
+ * Get courses by categoryId
  */
 router.put('/',
     require('../middlewares/auth.mdw'),
@@ -137,12 +145,14 @@ router.put('/',
                 throw new ErrorHandler(404, "Course is not existed.");
             }
 
-            const checkCategory = await catService.findOne({ id: entity.category_id, status: STATUS.active })
-            if (checkCategory === null) {
-                throw new ErrorHandler(404, "Category is not existed.");
+            if (entity.categoryId) {
+                const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active })
+                if (checkCategory === null) {
+                    throw new ErrorHandler(404, "Category is not existed.");
+                }
             }
 
-            const newEntity = { ...entity, updated_by: currentUser.userId };
+            const newEntity = { ...entity, updatedBy: currentUser.userId };
             const result = await courseService.update(dbEntity, newEntity);
             res.status(200).json(new Response(null, true, result));
         } catch (error) {
@@ -163,14 +173,14 @@ router.delete('/:id',
 
             const dbEntity = await courseService.findOne({ id, status: STATUS.active });
             if (dbEntity === null) {
-                throw new ErrorHandler(400, "Course is not existed.");
+                throw new ErrorHandler(404, "Course is not existed.");
             }
 
             await courseService.update(dbEntity, {
                 status: STATUS.deleted,
-                updated_by: currentUser.userId
+                updatedBy: currentUser.userId
             });
-            res.status(204).json(null);
+            res.status(204).json();
         } catch (error) {
             next(error);
         }

@@ -3,10 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const watch_list = sequelize.define(
     "watch_list",
     {
-      course_id: DataTypes.INTEGER,
+      courseId: DataTypes.INTEGER,
       status: DataTypes.INTEGER,
-      created_by: DataTypes.INTEGER,
-      updated_by: DataTypes.INTEGER,
+      createdBy: DataTypes.INTEGER,
+      updatedBy: DataTypes.INTEGER,
     },
     {}
   );

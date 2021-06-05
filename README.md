@@ -32,8 +32,8 @@ categories/
                 "category_name": "JAVA",
                 "status": 1,
                 "number_enrolled": 0,
-                "created_by": 1,
-                "updated_by": 1,
+                "createdBy": 1,
+                "updatedBy": 1,
                 "createdAt": "2021-06-03T08:11:17.000Z",
                 "updatedAt": "2021-06-03T08:16:30.000Z"
             },
@@ -59,7 +59,7 @@ categories/
     {
         "id": 6,
         "category_name": "ANGULAR",
-        "created_by": 1,
+        "createdBy": 1,
         "status": 1,
         "updatedAt": "2021-06-03T08:12:41.465Z",
         "createdAt": "2021-06-03T08:12:41.465Z"
@@ -83,8 +83,8 @@ categories/
         "category_name": "JAVA 8",
         "status": 1,
         "number_enrolled": 0,
-        "created_by": 1,
-        "updated_by": 1,
+        "createdBy": 1,
+        "updatedBy": 1,
         "createdAt": "2021-06-03T08:11:17.000Z",
         "updatedAt": "2021-06-03T08:44:19.965Z"
     }  
@@ -103,9 +103,9 @@ categories/
 
     * `page`: page number (default: 1)
     * `limit`: number of course per page (default: 10)
-    * `category_id`
+    * `categoryId`
     
     Example:
     ```
-    http://localhost:3000/api/courses?limit=2&category_id=1
+    http://localhost:3000/api/courses?limit=2&categoryId=1
     ```

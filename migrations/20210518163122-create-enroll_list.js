@@ -9,8 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       watching: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        type: Sequelize.INTEGER
       },
       done: {
         type: Sequelize.STRING,

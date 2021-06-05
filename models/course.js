@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       sale: DataTypes.FLOAT,
       status: DataTypes.INTEGER,
       teacherId: DataTypes.INTEGER,
-      createdby: DataTypes.INTEGER,
-      updatedby: DataTypes.INTEGER,
+      createdBy: DataTypes.INTEGER,
+      updatedBy: DataTypes.INTEGER,
     },
     {}
   );
@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     course.belongsTo(models.user);
     course.belongsTo(models.category);
+    course.hasMany(models.enroll_list, { foreignKey: 'courseId' });
   };
   return course;
 };

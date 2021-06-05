@@ -1,28 +1,18 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const randomstring = require('randomstring');
-const { ErrorHandler } = require('../exceptions/error');
-const SECRET_KEY = require('../config/config.json').SECRET_KEY;
 const db = require('../models');
 const Categories = require('../models/category')(db.sequelize, db.Sequelize.DataTypes);
-const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
-const Response = require('../response/response').Response;
+const { QueryTypes } = require('sequelize');
 
-exports.findAll = async function () {
-    return await Categories.findAndCountAll({ where: { status: STATUS.active } });
+exports.findAll = async function (page, limit) {
+    return await Categories.findAndCountAll({
+        where: { status: STATUS.active },
+        limit,
+        offset: (page - 1) * limit
+    });
 }
 
-exports.Create = async function (entity) {
-    const duplicate = await Categories.findOne({ where: { category_name: entity.category_name } });
-    if (duplicate !== null) {
-        throw new ErrorHandler(400, "Category existed");
-    }
-
-    entity.status = STATUS.active
-
-    const result = await Categories.create(entity);
-    return result;
+exports.create = async function (entity) {
+    return await Categories.create(entity);
 }
 
 /**
@@ -40,3 +30,16 @@ exports.update = async function (dbEntity, updateEntity) {
     return await dbEntity.update(updateEntity);
 }
 
+exports.findMostEnrollInWeek = async function () {
+    const result = await db.sequelize.query(
+        ` SELECT c2.*, COUNT(*) as numberEnrollThisWeek` +
+        ` FROM enroll_lists el` +
+        ` JOIN courses c ON el.courseId = c.id` +
+        ` JOIN categories c2 ON c.categoryId = c2.id` +
+        ` WHERE YEARWEEK(el.createdAt, 1) = YEARWEEK(CURDATE(), 1)` +
+        ` GROUP BY c.categoryId` +
+        ` ORDER BY numberEnrollThisWeek DESC` +
+        ` LIMIT 10`,
+        QueryTypes.SELECT);
+    return result[0];
+}

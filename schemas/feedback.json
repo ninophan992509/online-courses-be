@@ -3,7 +3,7 @@
         "title",
         "content",
         "rating",
-        "course_id"
+        "courseId"
     ],
     "additionalProperties": false,
     "properties": {
@@ -22,7 +22,7 @@
                 5
             ]
         },
-        "course_id": {
+        "courseId": {
             "type": "integer"
         },
         "status": {
