@@ -64,7 +64,7 @@ exports.getListHighlightCourses = async function () {
 
 exports.GetListMostViewsCourses = async function () {
     const result = await db.sequelize.query(
-        "select c.* from watch_lists as w inner join courses as c on w.course_id = c.id group by course_id order by count(w.course_id) desc limit 2",
+        "select c.* from watch_lists as w inner join courses as c on w.courseId = c.id group by courseId order by count(w.courseId) desc limit 2",
         QueryTypes.SELECT);
     return result[0];
 }

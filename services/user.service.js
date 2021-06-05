@@ -10,9 +10,9 @@ const USER_STATUS = require('../enums/user-status.enum');
 const Response = require('../response/response').Response;
 
 exports.Register = async function (user) {
-    const userWithSameUsername = await User.findOne({ where: { username: user.username } });
-    if (userWithSameUsername != null) {
-        throw new ErrorHandler(400, "Username existed");
+    const userWithSameEmail = await User.findOne({ where: { email: user.email } });
+    if (userWithSameEmail != null) {
+        throw new ErrorHandler(400, "Email existed");
     }
     user.password = bcrypt.hashSync(user.password, 10);
     user.status = USER_STATUS.active;
@@ -24,19 +24,19 @@ exports.Register = async function (user) {
 }
 
 exports.SignIn = async function (auth) {
-    var user = await User.findOne({ where: { username: auth.username } });
-    if (user == null) throw new ErrorHandler(404, "Wrong username or password");
-    if (!bcrypt.compareSync(auth.password, user.password)) throw new ErrorHandler(404, "Wrong username or password");
+    var user = await User.findOne({ where: { email: auth.email } });
+    if (user == null) throw new ErrorHandler(404, "Wrong email or password");
+    if (!bcrypt.compareSync(auth.password, user.password)) throw new ErrorHandler(404, "Wrong email or password");
 
     const payload = {
         userId: user.id,
         type: user.type
     };
     const opts = {
-        expiresIn: 2592000
+        expiresIn: 10
     }
     var accessToken = jwt.sign(payload, SECRET_KEY, opts);
-    var rfToken = randomstring.generate(2592000);
+    var rfToken = randomstring.generate(100);
     user.refreshtoken = rfToken;
     await user.save();
     const userInfo = user.toJSON();

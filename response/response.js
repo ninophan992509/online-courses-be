@@ -7,12 +7,13 @@ class Response{
 }
 
 class PageResponse{
-    constructor(message, code, data, pageNumber, pageSize){
+    constructor(message, code, data, pageNumber, pageSize, totalPage){
         this.message = message;
         this.code = code;
         this.data = data;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
+        this.totalPage = totalPage;
     }
 }
 
