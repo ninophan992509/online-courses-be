@@ -20,7 +20,7 @@ auth/
 * Register:
     ```
     POST '/register'
-    ``
+    ```
     Body:
     ```
     {
@@ -45,13 +45,14 @@ auth/
             "createdAt": "2021-06-05T15:55:11.089Z"
         }
     }
-    ```
+
     400 Bad Request:
     {
         "message": "Email existed",
         "code": false,
         "data": null
     }
+    ```
 
 * Signin:
     ```
@@ -82,13 +83,14 @@ auth/
             "rfToken": "BtnVYvLfssuLMug1fclLdQQPUdfj1fFLtT64br3PV2nXhkX0PJHiQXjeTfovkbHtMhWAZ9Sl7s260RbebaqMF2gkuWAYEVayAJGC"
         }
     }
-    ```
+
     404 Not Found:
     {
         "message": "Wrong email or password",
         "code": false,
         "data": null
     }
+    ```
 
 * Refresh AccessToken
     ```
@@ -111,20 +113,21 @@ auth/
             "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA4OTU5LCJleHAiOjE2MjY1MDg5NTl9.f5y4wIOKxBSBQYBAXFiaDRbV9NBBkBEYb8KgMhuTs9M"
         }
     }
-    ```
+
     401 Unauthorized:
     {
         "message": "Invalid access token",
         "code": false,
         "data": null
     }
-    ```
+
     400 Bad Request:
     {
         "message": "Invalid refresh token",
         "code": false,
         "data": null
     }
+    ```
 
 ## Category
 ```
@@ -251,168 +254,7 @@ categories/
                 "createdAt": "2021-06-05T08:44:00.000Z",
                 "updatedAt": "2021-06-05T09:00:43.000Z"
             },
-            {
-                "id": 2,
-                "course_name": "Windows XP",
-                "categoryId": 2,
-                "picture": "string",
-                "description": "thử",
-                "number_enrolled": 1,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:03:16.000Z",
-                "updatedAt": "2021-06-05T09:12:04.000Z"
-            },
-            {
-                "id": 3,
-                "course_name": "Windows 8",
-                "categoryId": 3,
-                "picture": "string",
-                "description": "abc",
-                "number_enrolled": 1,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:03:41.000Z",
-                "updatedAt": "2021-06-05T09:03:41.000Z"
-            },
-            {
-                "id": 4,
-                "course_name": "Windows 7",
-                "categoryId": 4,
-                "picture": "",
-                "description": "abc",
-                "number_enrolled": 1,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:03:45.000Z",
-                "updatedAt": "2021-06-05T09:03:45.000Z"
-            },
-            {
-                "id": 5,
-                "course_name": "Ubuntu",
-                "categoryId": 4,
-                "picture": "string",
-                "description": "abc",
-                "number_enrolled": 1,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:03:54.000Z",
-                "updatedAt": "2021-06-05T09:03:54.000Z"
-            },
-            {
-                "id": 6,
-                "course_name": "RedHat",
-                "categoryId": 4,
-                "picture": "",
-                "description": "abc",
-                "number_enrolled": 0,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:04:00.000Z",
-                "updatedAt": "2021-06-05T09:04:00.000Z"
-            },
-            {
-                "id": 7,
-                "course_name": "Java 8",
-                "categoryId": 4,
-                "picture": "",
-                "description": "abc",
-                "number_enrolled": 0,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:04:28.000Z",
-                "updatedAt": "2021-06-05T09:04:28.000Z"
-            },
-            {
-                "id": 8,
-                "course_name": "Java 11",
-                "categoryId": 5,
-                "picture": "string",
-                "description": "abc",
-                "number_enrolled": 0,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:05:20.000Z",
-                "updatedAt": "2021-06-05T09:05:20.000Z"
-            },
-            {
-                "id": 9,
-                "course_name": "Java Framework",
-                "categoryId": 5,
-                "picture": "string",
-                "description": "abc",
-                "number_enrolled": 0,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:05:45.000Z",
-                "updatedAt": "2021-06-05T09:05:45.000Z"
-            },
-            {
-                "id": 10,
-                "course_name": "Java Framework 1",
-                "categoryId": 5,
-                "picture": "string",
-                "description": "abc",
-                "number_enrolled": 0,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:52:53.000Z",
-                "updatedAt": "2021-06-05T09:52:53.000Z"
-            }
+            ....
         ]
     }
     ```
@@ -445,60 +287,7 @@ categories/
                 "createdAt": "2021-06-05T08:44:00.000Z",
                 "updatedAt": "2021-06-05T09:00:43.000Z"
             },
-            {
-                "id": 2,
-                "course_name": "Windows XP",
-                "categoryId": 2,
-                "picture": "string",
-                "description": "thử",
-                "number_enrolled": 1,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:03:16.000Z",
-                "updatedAt": "2021-06-05T09:12:04.000Z"
-            },
-            {
-                "id": 3,
-                "course_name": "Windows 8",
-                "categoryId": 3,
-                "picture": "string",
-                "description": "abc",
-                "number_enrolled": 1,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:03:41.000Z",
-                "updatedAt": "2021-06-05T09:03:41.000Z"
-            },
-            {
-                "id": 4,
-                "course_name": "Windows 7",
-                "categoryId": 4,
-                "picture": "",
-                "description": "abc",
-                "number_enrolled": 1,
-                "rating": 0,
-                "number_rating": 0,
-                "tuition_fee": 2300,
-                "sale": 0,
-                "status": 1,
-                "teacherId": null,
-                "createdBy": 2,
-                "updatedBy": 2,
-                "createdAt": "2021-06-05T09:03:45.000Z",
-                "updatedAt": "2021-06-05T09:03:45.000Z"
-            }
+            ...
         ]
     }
     ```
@@ -509,10 +298,13 @@ categories/
     POST '/'
     ```
     Headers:
+    ```
     {
         x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
     }
+    ```
     Body:
+    ```
     {
         "courseId":1
     }
@@ -534,3 +326,4 @@ categories/
             "createdAt": "2021-06-05T16:13:45.925Z"
         }
     }
+    ```
