@@ -41,16 +41,16 @@ exports.getLimitQuery = function (limit) {
     }
 }
 
-exports.getCategoryQuery = function (category_id) {
-    if (category_id === undefined || category_id === "") {
+exports.getCategoryQuery = function (categoryId) {
+    if (categoryId === undefined || categoryId === "") {
         return null;
     }
     try {
-        category_id = parseInt(category_id);
-        if (category_id < 0) {
-            category_id = null;
+        categoryId = parseInt(categoryId);
+        if (categoryId < 0) {
+            categoryId = null;
         }
-        return category_id;
+        return categoryId;
     } catch (ex) {
         console.error("Trying to parse category id query", ex);
         return null;

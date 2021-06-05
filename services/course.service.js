@@ -1,12 +1,14 @@
-const { ErrorHandler } = require('../exceptions/error');
 const db = require('../models');
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
-const { Response, PageResponse } = require('../response/response');
 const STATUS = require('../enums/status.enum');
-const { Op, QueryTypes, where } = require('sequelize');
+const { Op, QueryTypes } = require('sequelize');
+
+const LIMIT = 10;
+const OFFSET = 0;
+
 /**
  * 
- * @param whereObject ex: { category_id: 1, status: STATUS.active }
+ * @param whereObject ex: { categoryId: 1, status: STATUS.active }
  * @returns 1 category entity
  */
 exports.findOne = async function (whereObject) {
@@ -23,8 +25,8 @@ exports.findNewest = async function () {
         order: [
             ['createdAt', 'DESC']
         ],
-        limit: 10,
-        offset: 0,
+        limit: LIMIT,
+        offset: OFFSET,
     });
 }
 
@@ -37,21 +39,21 @@ exports.findMostEnrolled = async function () {
         order: [
             ['number_enrolled', 'DESC']
         ],
-        limit: 10,
-        offset: 0,
+        limit: LIMIT,
+        offset: OFFSET,
     });
 }
 
 
-exports.findAll = async function (page, limit, category_id) {
+exports.findAll = async function (page, limit, categoryId) {
     const whereObj = { status: STATUS.active }
-    if (category_id) {
-        whereObj.category_id = category_id;
+    if (categoryId) {
+        whereObj.categoryId = categoryId;
     }
     const result = await Courses.findAndCountAll({
         where: whereObj,
         limit,
-        offset: page - 1,
+        offset: (page - 1) * limit,
     });
     const extraData = await Promise.all([
         exports.findNewest(),
@@ -59,30 +61,31 @@ exports.findAll = async function (page, limit, category_id) {
         exports.getListHighlightCourses(),
     ]);
     const check = {
-        isNew: Set(),
-        mostEnrolled: Set(),
-        highlight: Set(),
+        isNew: new Set(),
+        isMostEnrolled: new Set(),
+        isHighlight: new Set(),
     }
     extraData[0].rows.forEach(x => { check.isNew.add(x.id); });
-    extraData[1].rows.forEach(x => { check.mostEnrolled.add(x.id); });
-    extraData[2].rows.forEach(x => { check.highlight.add(x.id); });
-    result.rows.forEach(x => {
+    extraData[1].rows.forEach(x => { check.isMostEnrolled.add(x.id); });
+    extraData[2].forEach(x => { check.isHighlight.add(x.id); });
+    for (let i = 0; i < result.rows.length; i++) {
+        let x = result.rows[i].dataValues;
         if (check.isNew.has(x.id)) {
             x.isNew = true;
         } else {
             x.isNew = false;
         }
-        if (check.mostEnrolled.has(x.id)) {
-            x.mostEnrolled = true;
+        if (check.isMostEnrolled.has(x.id)) {
+            x.isMostEnrolled = true;
         } else {
-            x.mostEnrolled = false;
+            x.isMostEnrolled = false;
         }
-        if (check.highlight.has(x.id)) {
-            x.highlight = true;
+        if (check.isHighlight.has(x.id)) {
+            x.isHighlight = true;
         } else {
-            x.highlight = false;
+            x.isHighlight = false;
         }
-    });
+    }
     return result;
 }
 
@@ -102,14 +105,15 @@ exports.getListHighlightCourses = async function () {
                 [Op.gt]: Date.now() - 7 * 24 * 3600 * 1000
             }
         },
-        limit: 10,
+        limit: LIMIT,
         order: [['rating', 'DESC']]
     });
 }
 
-exports.GetListMostViewsCourses = async function () {
+exports.getListMostViewsCourses = async function () {
     const result = await db.sequelize.query(
-        "select c.* from watch_lists as w inner join courses as c on w.course_id = c.id group by course_id order by count(w.course_id) desc limit 2",
-        QueryTypes.SELECT);
+        "select c.* from watch_lists as w inner join courses as c on w.courseId = c.id group by courseId order by count(w.courseId) desc limit 2",
+        QueryTypes.SELECT
+    );
     return result[0];
 }

@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       category_name: DataTypes.STRING,
       status: DataTypes.INTEGER,
       number_enrolled: DataTypes.INTEGER,
-      created_by: DataTypes.INTEGER,
-      updated_by: DataTypes.INTEGER
+      createdBy: DataTypes.INTEGER,
+      updatedBy: DataTypes.INTEGER
     },
     {}
   );

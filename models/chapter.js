@@ -3,13 +3,13 @@ module.exports = (sequelize, DataTypes) => {
   const chapter = sequelize.define(
     "chapter",
     {
-      course_id: DataTypes.STRING,
+      courseId: DataTypes.STRING,
       chapter_name: DataTypes.STRING,
       description: DataTypes.TEXT,
       is_previewed: DataTypes.INTEGER,
       status: DataTypes.INTEGER,
-      created_by: DataTypes.INTEGER,
-      updated_by: DataTypes.INTEGER,
+      createdBy: DataTypes.INTEGER,
+      updatedBy: DataTypes.INTEGER,
     },
     {}
   );

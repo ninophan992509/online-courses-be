@@ -1,44 +1,77 @@
 const express = require('express');
 const router = express.Router();
 const catSchema = require('../schemas/category.json');
-const catService = require('../services/category.service');
+const categoryService = require('../services/category.service');
 const courseService = require('../services/course.service');
+const { Response, PageResponse } = require('../response/response');
 const { ErrorHandler } = require('../exceptions/error');
-const { getPutSchema } = require('../utils');
 const STATUS = require('../enums/status.enum');
 const USER_TYPE = require('../enums/user-type.enum');
+const getQuerySchema = require('../schemas/getQuery');
+
+const {
+    getPutSchema,
+    getLimitQuery,
+    getPageQuery,
+} = require('../utils');
+
+const validateAuth = require('../middlewares/auth.mdw');
+const validateRoles = require('../middlewares/auth.roles.mdw');
+const validateGetQuery = require('../middlewares/validateGetQuery.mdw');
+const validateSchema = require('../middlewares/validate.mdw');
 
 router.post('/',
-    require('../middlewares/auth.mdw'),
-    require('../middlewares/auth.roles.mdw')([USER_TYPE.admin]),
-    require('../middlewares/validate.mdw')(catSchema),
+    validateAuth,
+    validateRoles([USER_TYPE.admin]),
+    validateSchema(catSchema),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
             const entity = req.body;
-            entity.created_by = payload.userId;
+
+            const duplicate = await categoryService.findOne({ category_name: entity.category_name });
+            if (duplicate) {
+                throw new ErrorHandler(400, "Category existed.");
+            }
+
+            entity.createdBy = payload.userId;
             entity.status = STATUS.active;
-            const result = await catService.Create(entity);
-            res.status(201).json(result);
+            entity.number_enrolled = 0;
+
+            const result = await categoryService.create(entity);
+            res.status(201).json(new Response(null, true, result));
         } catch (error) {
             next(error);
         }
     }
 );
 
-router.get('/', async function (req, res, next) {
+router.get('/', validateGetQuery(getQuerySchema), async function (req, res, next) {
     try {
-        const result = await catService.findAll();
-        res.status(result.rows.length !== 0 ? 200 : 204).json(result);
+        let { page, limit } = req.query;
+        page = getPageQuery(page);
+        limit = getLimitQuery(limit);
+        const result = await categoryService.findAll(page, limit);
+        res.status(result.rows.length !== 0 ? 200 : 204).json(new PageResponse(null, true, result, page, limit));
     } catch (error) {
         next(error);
     }
 });
 
+router.get('/most-enroll-this-week', async function (req, res, next) {
+    try {
+        const result = await categoryService.findMostEnrollInWeek();
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
+        next(error);
+    }
+});
+
+
 router.put('/',
-    require('../middlewares/auth.mdw'),
-    require('../middlewares/auth.roles.mdw')([USER_TYPE.admin]),
-    require('../middlewares/validate.mdw')(getPutSchema(catSchema)),
+    validateAuth,
+    validateRoles([USER_TYPE.admin]),
+    validateSchema(getPutSchema(catSchema)),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
@@ -47,15 +80,15 @@ router.put('/',
             const entity = req.body;
             const id = entity.id;
 
-            const dbEntity = await catService.findOne({ id, status: STATUS.active });
+            const dbEntity = await categoryService.findOne({ id, status: STATUS.active });
             if (!dbEntity) {
                 throw new ErrorHandler(404, "Not exist entity");
             }
-            const result = await catService.update(dbEntity, {
+            const result = await categoryService.update(dbEntity, {
                 category_name: entity.category_name,
-                updated_by: currentUser.userId
+                updatedBy: currentUser.userId
             });
-            res.status(200).json(result);
+            res.status(200).json(new Response(null, true, result));
         } catch (error) {
             next(error);
         }
@@ -63,8 +96,8 @@ router.put('/',
 );
 
 router.delete('/:id',
-    require('../middlewares/auth.mdw'),
-    require('../middlewares/auth.roles.mdw')([USER_TYPE.admin]),
+    validateAuth,
+    validateRoles([USER_TYPE.admin]),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
@@ -73,26 +106,27 @@ router.delete('/:id',
             const id = parseInt(req.params.id);
 
             const existCourse = await courseService.findOne({
-                category_id: id,
+                categoryId: id,
                 status: STATUS.active
             });
             if (existCourse !== null) {
                 throw new ErrorHandler(404, "Course existed");
             }
 
-            const dbEntity = await catService.findOne({ id, status: STATUS.active });
+            const dbEntity = await categoryService.findOne({ id, status: STATUS.active });
             if (dbEntity === null) {
                 throw new ErrorHandler(404, "Category is not existed.");
             }
 
-            const result = await catService.update(dbEntity, {
+            const result = await categoryService.update(dbEntity, {
                 status: STATUS.deleted,
-                updated_by: currentUser.userId
+                updatedBy: currentUser.userId
             });
-            res.status(204).json(null);
+            res.status(204).json();
         } catch (error) {
             next(error);
         }
-    });
+    }
+);
 
 module.exports = router;

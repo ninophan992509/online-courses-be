@@ -4,7 +4,7 @@
         "picture",
         "tuition_fee",
         "description",
-        "category_id"
+        "categoryId"
     ],
     "additionalProperties": false,
     "properties": {
@@ -24,15 +24,17 @@
             "type": "string"
         },
         "tuition_fee": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0
         },
         "sale": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0
         },
         "description": {
             "type": "string"
         },
-        "category_id": {
+        "categoryId": {
             "type": "integer"
         },
         "status": {

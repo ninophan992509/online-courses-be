@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "course",
     {
       course_name: DataTypes.STRING,
-      category_id: DataTypes.INTEGER,
+      categoryId: DataTypes.INTEGER,
       picture: DataTypes.TEXT,
       description: DataTypes.TEXT,
       number_enrolled: DataTypes.INTEGER,
@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       tuition_fee: DataTypes.BIGINT,
       sale: DataTypes.FLOAT,
       status: DataTypes.INTEGER,
-      teacher_id: DataTypes.INTEGER,
-      created_by: DataTypes.INTEGER,
-      updated_by: DataTypes.INTEGER,
+      teacherId: DataTypes.INTEGER,
+      createdBy: DataTypes.INTEGER,
+      updatedBy: DataTypes.INTEGER,
     },
     {}
   );
@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     course.belongsTo(models.user);
     course.belongsTo(models.category);
+    course.hasMany(models.enroll_list, { foreignKey: 'courseId' });
   };
   return course;
 };

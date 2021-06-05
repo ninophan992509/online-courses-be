@@ -5,7 +5,7 @@ module.exports = {
     return queryInterface
       .addColumn(
         "categories", // name of Source model
-        "created_by", // name of the key we're adding
+        "createdBy", // name of the key we're adding
         {
           type: Sequelize.INTEGER,
           references: {
@@ -20,7 +20,7 @@ module.exports = {
         queryInterface
           .addColumn(
             "categories", // name of Source model
-            "updated_by", // name of the key we're adding
+            "updatedBy", // name of the key we're adding
             {
               type: Sequelize.INTEGER,
               references: {
@@ -34,7 +34,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "courses", // name of Source model
-              "created_by", // name of the key we're adding
+              "createdBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -49,7 +49,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "courses", // name of Source model
-              "updated_by", // name of the key we're adding
+              "updatedBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -64,7 +64,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "courses", // name of Source model
-              "teacher_id", // name of the key we're adding
+              "teacherId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -79,7 +79,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "courses", // name of Source model
-              "category_id", // name of the key we're adding
+              "categoryId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -94,7 +94,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "feedbacks", // name of Source model
-              "course_id", // name of the key we're adding
+              "courseId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -109,7 +109,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "feedbacks", // name of Source model
-              "created_by", // name of the key we're adding
+              "createdBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -124,7 +124,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "feedbacks", // name of Source model
-              "updated_by", // name of the key we're adding
+              "updatedBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -139,7 +139,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "chapters", // name of Source model
-              "course_id", // name of the key we're adding
+              "courseId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -154,7 +154,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "chapters", // name of Source model
-              "created_by", // name of the key we're adding
+              "createdBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -169,7 +169,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "chapters", // name of Source model
-              "updated_by", // name of the key we're adding
+              "updatedBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -184,7 +184,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "videos", // name of Source model
-              "chapter_id", // name of the key we're adding
+              "chapterId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -199,7 +199,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "videos", // name of Source model
-              "created_by", // name of the key we're adding
+              "createdBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -214,7 +214,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "videos", // name of Source model
-              "updated_by", // name of the key we're adding
+              "updatedBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -229,7 +229,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "documents", // name of Source model
-              "chapter_id", // name of the key we're adding
+              "chapterId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -244,7 +244,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "documents", // name of Source model
-              "created_by", // name of the key we're adding
+              "createdBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -259,7 +259,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "documents", // name of Source model
-              "updated_by", // name of the key we're adding
+              "updatedBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -274,7 +274,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "watch_lists", // name of Source model
-              "course_id", // name of the key we're adding
+              "courseId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -289,7 +289,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "watch_lists", // name of Source model
-              "created_by", // name of the key we're adding
+              "createdBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -304,7 +304,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "watch_lists", // name of Source model
-              "updated_by", // name of the key we're adding
+              "updatedBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -319,7 +319,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "enroll_lists", // name of Source model
-              "course_id", // name of the key we're adding
+              "courseId", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -334,7 +334,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "enroll_lists", // name of Source model
-              "created_by", // name of the key we're adding
+              "createdBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -349,7 +349,7 @@ module.exports = {
           .then(() =>
             queryInterface.addColumn(
               "enroll_lists", // name of Source model
-              "updated_by", // name of the key we're adding
+              "updatedBy", // name of the key we're adding
               {
                 type: Sequelize.INTEGER,
                 references: {
@@ -368,144 +368,144 @@ module.exports = {
     return queryInterface
       .removeColumn(
         "categories", // name of Source model
-        "created_by" // key we want to remove
+        "createdBy" // key we want to remove
       )
       .then(() =>
         queryInterface.removeColumn(
           "categories", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "courses", // name of Source model
-          "created_by" // key we want to remove
+          "createdBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "courses", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "courses", // name of Source model
-          "category_id" // key we want to remove
+          "categoryId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "courses", // name of Source model
-          "teacher_id" // key we want to remove
+          "teacherId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "feedbacks", // name of Source model
-          "course_id" // key we want to remove
+          "courseId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "feedbacks", // name of Source model
-          "created_by" // key we want to remove
+          "createdBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "feedbacks", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "chapters", // name of Source model
-          "course_id" // key we want to remove
+          "courseId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "chapters", // name of Source model
-          "created_by" // key we want to remove
+          "createdBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "chapters", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "videos", // name of Source model
-          "chapter_id" // key we want to remove
+          "chapterId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "videos", // name of Source model
-          "created_by" // key we want to remove
+          "createdBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "videos", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "documents", // name of Source model
-          "chapter_id" // key we want to remove
+          "chapterId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "documents", // name of Source model
-          "created_by" // key we want to remove
+          "createdBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "documents", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "watch_lists", // name of Source model
-          "course_id" // key we want to remove
+          "courseId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "watch_lists", // name of Source model
-          "created_by" // key we want to remove
+          "createdBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "watch_lists", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "enroll_lists", // name of Source model
-          "course_id" // key we want to remove
+          "courseId" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "enroll_lists", // name of Source model
-          "created_by" // key we want to remove
+          "createdBy" // key we want to remove
         )
       )
       .then(() =>
         queryInterface.removeColumn(
           "enroll_lists", // name of Source model
-          "updated_by" // key we want to remove
+          "updatedBy" // key we want to remove
         )
       );
   },
