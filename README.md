@@ -327,3 +327,26 @@ categories/
         }
     }
     ```
+
+## Storage
+* Get Upload URL
+    ```
+    GET '/upload-url'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": {
+        "signedUrl": "https://storage.googleapis.com/online-course-316014.appspot.com/cf8de57b-6a80-452e-a0b5-ab0fcbec3218?X-Goog-Algorithm=GOOG4-RSA-SHA256&..."
+        }
+    }
+    ```
