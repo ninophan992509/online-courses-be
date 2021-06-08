@@ -232,6 +232,7 @@ categories/
     ```
     Response:
     ```
+    200 OK
     {
         "message": null,
         "code": true,
@@ -265,6 +266,7 @@ categories/
     ```
     Response:
     ```
+    200 OK
     {
         "message": null,
         "code": true,
@@ -292,10 +294,37 @@ categories/
     }
     ```
 
-## Enroll list
+* Get Enroll course
+    ```
+    GET '/:id/enroll'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 17,
+            "watching": 0,
+            "done": "[]",
+            "status": 1,
+            "courseId": 1,
+            "createdBy": 1,
+            "updatedAt": "2021-06-05T16:13:45.925Z",
+            "createdAt": "2021-06-05T16:13:45.925Z"
+        }
+    }
+    ```
 * Enroll course
     ```
-    POST '/'
+    POST '/:id/enroll'
     ```
     Headers:
     ```
