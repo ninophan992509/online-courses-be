@@ -60,7 +60,8 @@ router.get('/',
         } catch (error) {
             next(error);
         }
-    });
+    }
+);
 
 router.get('/newest', async function (req, res, next) {
     try {
@@ -105,6 +106,29 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
+router.get('/:id/rating', async function (req, res, next) {
+    try {
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 0) {
+            throw new ErrorHandler(400, "Id NaN.");
+        }
+
+        const course = await courseService.findOne({ id, status: STATUS.active });
+        if (!course) {
+            throw new ErrorHandler(400, "Course is not exist.");
+        }
+
+        const result = await courseService.findRating(id);
+        Object.keys(result).forEach(key => {
+            result[key] = parseInt(result[key]);
+        })
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/:id/feedbacks', async function (req, res, next) {
     try {
         let { id } = req.params;
@@ -112,7 +136,7 @@ router.get('/:id/feedbacks', async function (req, res, next) {
         if (isNaN(id) || id < 0) {
             throw new ErrorHandler(400, "Id NaN.");
         }
-        const currentCourse = await courseService.findOne({ id });
+        const currentCourse = await courseService.findOne({ id, status: STATUS.active });
         if (currentCourse === null) {
             throw new ErrorHandler(404, "Course is not existed.");
         }
@@ -127,8 +151,8 @@ router.get('/:id/feedbacks', async function (req, res, next) {
     }
 });
 
-router.get('/:id/enroll', require('../middlewares/auth.mdw'),async function (req,res,next){
-    try{
+router.get('/:id/enroll', require('../middlewares/auth.mdw'), async function (req, res, next) {
+    try {
         let { id } = req.params;
         id = parseInt(id);
         if (isNaN(id) || id < 0) {
@@ -140,14 +164,14 @@ router.get('/:id/enroll', require('../middlewares/auth.mdw'),async function (req
         }
         let userId = req.accessTokenPayload.userId;
         const result = await enrollListsService.GetEnrollCourseInfo(id, userId);
-        res.status(200).json(new Response(null,true,result));
-    }catch(error){
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
         next(error);
     }
 });
 
-router.post('/:id/enroll', require('../middlewares/auth.mdw') ,async function (req,res,next){
-    try{
+router.post('/:id/enroll', require('../middlewares/auth.mdw'), async function (req, res, next) {
+    try {
         let { id } = req.params;
         id = parseInt(id);
         if (isNaN(id) || id < 0) {
@@ -158,9 +182,14 @@ router.post('/:id/enroll', require('../middlewares/auth.mdw') ,async function (r
             throw new ErrorHandler(404, "Course is not existed.");
         }
         let userId = req.accessTokenPayload.userId;
+        const checkEnroll = await enrollListsService.findOne({ createdBy: userId, courseId: id })
+        if (checkEnroll) {
+            throw new ErrorHandler(400, "User has already enrolled this course.");
+        }
         const result = await enrollListsService.EnrollCourses(id, userId);
-        res.status(200).json(new Response(null,true,result));
-    }catch(error){
+        await courseService.updateEnrolled(currentCourse);
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
         next(error);
     }
 });
