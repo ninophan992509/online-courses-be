@@ -5,6 +5,7 @@ const getQuerySchema = require('../schemas/getQuery');
 const catService = require('../services/category.service');
 const courseService = require('../services/course.service');
 const feedbackService = require('../services/feedback.service');
+const enrollListsService = require('../services/enroll-list.service');
 const { Response, PageResponse } = require('../response/response');
 const { ErrorHandler } = require('../exceptions/error');
 const STATUS = require('../enums/status.enum');
@@ -122,6 +123,44 @@ router.get('/:id/feedbacks', async function (req, res, next) {
         res.status(200).json(new PageResponse(null, true, result, page, limit));
 
     } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:id/enroll', require('../middlewares/auth.mdw'),async function (req,res,next){
+    try{
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 0) {
+            throw new ErrorHandler(400, "Id NaN.");
+        }
+        const currentCourse = await courseService.findOne({ id });
+        if (currentCourse === null) {
+            throw new ErrorHandler(404, "Course is not existed.");
+        }
+        let userId = req.accessTokenPayload.userId;
+        const result = await enrollListsService.GetEnrollCourseInfo(id, userId);
+        res.status(200).json(new Response(null,true,result));
+    }catch(error){
+        next(error);
+    }
+});
+
+router.post('/:id/enroll', require('../middlewares/auth.mdw') ,async function (req,res,next){
+    try{
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 0) {
+            throw new ErrorHandler(400, "Id NaN.");
+        }
+        const currentCourse = await courseService.findOne({ id });
+        if (currentCourse === null) {
+            throw new ErrorHandler(404, "Course is not existed.");
+        }
+        let userId = req.accessTokenPayload.userId;
+        const result = await enrollListsService.EnrollCourses(id, userId);
+        res.status(200).json(new Response(null,true,result));
+    }catch(error){
         next(error);
     }
 });

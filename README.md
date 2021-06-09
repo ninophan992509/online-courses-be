@@ -428,6 +428,7 @@ courses/
     ```
     Response:
     ```
+    200 OK
     {
         "message": null,
         "code": true,
@@ -461,6 +462,7 @@ courses/
     ```
     Response:
     ```
+    200 OK
     {
         "message": null,
         "code": true,
@@ -488,143 +490,37 @@ courses/
     }
     ```
 
-* Create new course (admin, teacher):
+* Get Enroll course
     ```
-    POST `/`
+    GET '/:id/enroll'
     ```
-    Body:
+    Headers:
     ```
     {
-        "course_name": "Java Framework 7",
-        "picture": "string",
-        "tuition_fee": 2300,
-        "description": "abc",
-        "category_id": 3
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
     }
     ```
     Response:
     ```
+    200 OK:
     {
         "message": null,
         "code": true,
         "data": {
-            "id": 6,
-            "course_name": "Java Framework 7",
-            "picture": "string",
-            "tuition_fee": 2300,
-            "description": "abc",
-            "categoryId": 3,
-            "createdBy": 4,
+            "id": 17,
+            "watching": 0,
+            "done": "[]",
             "status": 1,
-            "number_enrolled": 0,
-            "sale": 0,
-            "updatedAt": "2021-06-08T03:43:56.978Z",
-            "createdAt": "2021-06-08T03:43:56.978Z"
+            "courseId": 1,
+            "createdBy": 1,
+            "updatedAt": "2021-06-05T16:13:45.925Z",
+            "createdAt": "2021-06-05T16:13:45.925Z"
         }
     }
     ```
-
-* Edit course (admin, teacher who created course):
-    ```
-    PUT '/'
-    ```
-    Body:
-    ```
-    {
-        "id": 2,
-        "description": "test edit"
-    }
-    ```
-    Response:
-    ```
-    {
-        "message": null,
-        "code": true,
-        "data": {
-            "id": 2,
-            "course_name": "Angular for beginer",
-            "categoryId": 5,
-            "picture": null,
-            "description": "test edit",
-            "number_enrolled": 0,
-            "rating": 0,
-            "number_rating": 0,
-            "tuition_fee": 2000,
-            "sale": null,
-            "status": 1,
-            "teacherId": 1,
-            "createdBy": null,
-            "updatedBy": 4,
-            "createdAt": "2021-06-05T08:44:00.000Z",
-            "updatedAt": "2021-06-08T03:47:07.962Z"
-        }
-    }
-    ```
-
-* Delete course (admin, teacher who created course):
-    ```
-    DELETE '/:id'
-    ```
-
-* Get one course:
-    ```
-    GET '/:id'
-    ```
-    Response:
-    ```
-    {
-        "message": null,
-        "code": true,
-        "data": {
-            "id": 2,
-            "course_name": "Angular for beginer",
-            "categoryId": 5,
-            "picture": null,
-            "description": "test edit",
-            "number_enrolled": 0,
-            "rating": 0,
-            "number_rating": 0,
-            "tuition_fee": 2000,
-            "sale": null,
-            "status": 1,
-            "teacherId": 1,
-            "createdBy": null,
-            "updatedBy": 4,
-            "createdAt": "2021-06-05T08:44:00.000Z",
-            "updatedAt": "2021-06-08T03:47:07.000Z"
-        }
-    }
-    ```
-
-* Get feedbacks of course:
-    ```
-    '/:id/feedbacks'
-    ```
-    Query:
-    * `page`: page number
-    * `limit`: number item per page
-    Example:
-    ```
-    http://localhost:3000/api/courses/3/feedbacks
-    ```
-    Response:
-    ```
-    {
-        "message": null,
-        "code": true,
-        "data": {
-            "count": 0,
-            "rows": []
-        },
-        "pageNumber": 1,
-        "pageSize": 10
-    }
-    ```
-
-## Enroll list
 * Enroll course
     ```
-    POST '/'
+    POST '/:id/enroll'
     ```
     Headers:
     ```
