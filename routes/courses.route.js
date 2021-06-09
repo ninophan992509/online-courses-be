@@ -30,6 +30,7 @@ router.post('/',
             }
 
             entity.createdBy = payload.userId;
+            entity.teacherId = payload.userId;
             entity.status = STATUS.active;
             entity.number_enrolled = 0;
             entity.sale = entity.sale ? entity.sale : 0;
@@ -118,7 +119,7 @@ router.get('/:id/feedbacks', async function (req, res, next) {
         page = getPageQuery(page);
         limit = getLimitQuery(limit);
         const result = await feedbackService.findAll(page, limit, id);
-        res.status(result.rows.length !== 0 ? 200 : 204).json(new PageResponse(null, true, result, page, limit));
+        res.status(200).json(new PageResponse(null, true, result, page, limit));
 
     } catch (error) {
         next(error);
@@ -141,8 +142,14 @@ router.put('/',
             const id = entity.id;
 
             const dbEntity = await courseService.findOne({ id, status: STATUS.active });
+
             if (!dbEntity) {
                 throw new ErrorHandler(404, "Course is not existed.");
+            }
+
+            if (payload.type !== USER_TYPE.admin &&
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
+                throw new ErrorHandler(403, "Permission denied.");
             }
 
             if (entity.categoryId) {
@@ -172,8 +179,14 @@ router.delete('/:id',
             const id = parseInt(req.params.id);
 
             const dbEntity = await courseService.findOne({ id, status: STATUS.active });
+
             if (dbEntity === null) {
                 throw new ErrorHandler(404, "Course is not existed.");
+            }
+
+            if (payload.type !== USER_TYPE.admin &&
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
+                throw new ErrorHandler(403, "Permission denied.");
             }
 
             await courseService.update(dbEntity, {
