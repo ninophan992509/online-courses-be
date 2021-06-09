@@ -490,6 +490,140 @@ courses/
     }
     ```
 
+* Create new course (admin, teacher):
+    ```
+    POST `/`
+    ```
+    Body:
+    ```
+    {
+        "course_name": "Java Framework 7",
+        "picture": "string",
+        "tuition_fee": 2300,
+        "description": "abc",
+        "category_id": 3
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 6,
+            "course_name": "Java Framework 7",
+            "picture": "string",
+            "tuition_fee": 2300,
+            "description": "abc",
+            "categoryId": 3,
+            "createdBy": 4,
+            "status": 1,
+            "number_enrolled": 0,
+            "sale": 0,
+            "updatedAt": "2021-06-08T03:43:56.978Z",
+            "createdAt": "2021-06-08T03:43:56.978Z"
+        }
+    }
+    ```
+
+* Edit course (admin, teacher who created course):
+    ```
+    PUT '/'
+    ```
+    Body:
+    ```
+    {
+        "id": 2,
+        "description": "test edit"
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 2,
+            "course_name": "Angular for beginer",
+            "categoryId": 5,
+            "picture": null,
+            "description": "test edit",
+            "number_enrolled": 0,
+            "rating": 0,
+            "number_rating": 0,
+            "tuition_fee": 2000,
+            "sale": null,
+            "status": 1,
+            "teacherId": 1,
+            "createdBy": null,
+            "updatedBy": 4,
+            "createdAt": "2021-06-05T08:44:00.000Z",
+            "updatedAt": "2021-06-08T03:47:07.962Z"
+        }
+    }
+    ```
+
+* Delete course (admin, teacher who created course):
+    ```
+    DELETE '/:id'
+    ```
+
+* Get one course:
+    ```
+    GET '/:id'
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 2,
+            "course_name": "Angular for beginer",
+            "categoryId": 5,
+            "picture": null,
+            "description": "test edit",
+            "number_enrolled": 0,
+            "rating": 0,
+            "number_rating": 0,
+            "tuition_fee": 2000,
+            "sale": null,
+            "status": 1,
+            "teacherId": 1,
+            "createdBy": null,
+            "updatedBy": 4,
+            "createdAt": "2021-06-05T08:44:00.000Z",
+            "updatedAt": "2021-06-08T03:47:07.000Z"
+        }
+    }
+    ```
+
+* Get feedbacks of course:
+    ```
+    '/:id/feedbacks'
+    ```
+    Query:
+    * `page`: page number
+    * `limit`: number item per page
+    Example:
+    ```
+    http://localhost:3000/api/courses/3/feedbacks
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "count": 0,
+            "rows": []
+        },
+        "pageNumber": 1,
+        "pageSize": 10
+    }
+    ```
+
+
 * Get Enroll course
     ```
     GET '/:id/enroll'
@@ -518,6 +652,7 @@ courses/
         }
     }
     ```
+
 * Enroll course
     ```
     POST '/:id/enroll'

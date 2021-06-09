@@ -4,20 +4,24 @@ const EnrollList = require('../models/enroll_list')(db.sequelize, db.Sequelize.D
 const STATUS = require('../enums/status.enum');
 const Response = require('../response/response').Response;
 
-exports.EnrollCourses = async function(courseId, userId){
-    const enroll = {watching: 0, done: "[]", status: STATUS.active, courseId: courseId, createdBy: userId};
+exports.EnrollCourses = async function (courseId, userId) {
+    const enroll = { watching: 0, done: "[]", status: STATUS.active, courseId: courseId, createdBy: userId };
     const result = await EnrollList.create(enroll);
     return result;
 }
 
-exports.GetEnrollCourseInfo = async function(courseId, userId){
+exports.GetEnrollCourseInfo = async function (courseId, userId) {
     const enroll = await EnrollList.findOne(
         {
-            where:{
+            where: {
                 courseId: courseId,
                 createdBy: userId
             }
         });
     if (enroll == null) throw new ErrorHandler(404, "User does not enroll on this course yet");
     return enroll;
+}
+
+exports.findOne = async function (whereObject) {
+    return await EnrollList.findOne({ where: whereObject });
 }
