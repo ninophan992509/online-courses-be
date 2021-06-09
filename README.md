@@ -332,12 +332,6 @@ categories/
         x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
     }
     ```
-    Body:
-    ```
-    {
-        "courseId":1
-    }
-    ```
     Response:
     ```
     200 OK:
@@ -356,7 +350,42 @@ categories/
         }
     }
     ```
-
+* Update enroll course
+    ```
+    PUT '/:id/enroll'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Body:
+    ```
+    {
+        "watching":2,
+        "done":"[1]",
+        "status":1
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 1,
+            "courseId": 1,
+            "watching": 2,
+            "done": "[1]",
+            "status": 1,
+            "createdBy": 1,
+            "updatedBy": null,
+            "createdAt": "2021-06-08T16:11:44.000Z",
+            "updatedAt": "2021-06-09T14:58:32.689Z"
+        }
+    }
+    ```
 ## Storage
 * Get Upload URL
     ```

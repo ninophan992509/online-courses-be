@@ -21,3 +21,20 @@ exports.GetEnrollCourseInfo = async function(courseId, userId){
     if (enroll == null) throw new ErrorHandler(404, "User does not enroll on this course yet");
     return enroll;
 }
+
+exports.UpdateEnrollCourses = async function(enrollInfo){
+    const enroll = await EnrollList.findOne(
+        {
+            where:{
+                courseId: enrollInfo.courseId,
+                createdBy: enrollInfo.createdBy
+            }
+        }
+    );
+    if (enroll == null) throw new ErrorHandler(404, "User does not enroll on this course yet");
+    if (enrollInfo.watching) enroll.watching = enrollInfo.watching;
+    if (enrollInfo.done) enroll.done = enrollInfo.done;
+    if (enrollInfo.status) enroll.status = enrollInfo.status;
+    await enroll.save();
+    return enroll;
+}
