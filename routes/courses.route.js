@@ -6,6 +6,7 @@ const getQuerySchema = require('../schemas/getQuery');
 const catService = require('../services/category.service');
 const courseService = require('../services/course.service');
 const feedbackService = require('../services/feedback.service');
+const chapterService = require('../services/chapter.service');
 const enrollListsService = require('../services/enroll-list.service');
 const { Response, PageResponse } = require('../response/response');
 const { ErrorHandler } = require('../exceptions/error');
@@ -15,7 +16,6 @@ const {
     getPutSchema,
     getLimitQuery,
     getPageQuery,
-    getCategoryQuery,
 } = require('../utils');
 
 router.post('/',
@@ -32,10 +32,11 @@ router.post('/',
             }
 
             entity.createdBy = payload.userId;
-            entity.status = STATUS.active;
+            entity.teacherId = payload.userId;
+            entity.status = STATUS.notDone;
             entity.number_enrolled = 0;
             entity.sale = entity.sale ? entity.sale : 0;
-            const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active })
+            const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active });
             if (checkCategory === null) {
                 throw new ErrorHandler(404, "Category is not existed.");
             }
@@ -54,18 +55,22 @@ router.get('/',
             let { page, limit, categoryId } = req.query;
             page = getPageQuery(page);
             limit = getLimitQuery(limit);
-            categoryId = getCategoryQuery(categoryId);
+            categoryId = parseInt(categoryId);
+            if (isNaN(categoryId) || categoryId < 1) {
+                throw new ErrorHandler(400, "Invalid categoryId.");
+            }
             const result = await courseService.findAll(page, limit, categoryId);
-            res.status(result.length !== 0 ? 200 : 204).json(new PageResponse(null, true, result, page, limit));
+            res.status(200).json(new PageResponse(null, true, result, page, limit));
         } catch (error) {
             next(error);
         }
-    });
+    }
+);
 
 router.get('/newest', async function (req, res, next) {
     try {
         const result = await courseService.findNewest();
-        res.status(result.rows.length !== 0 ? 200 : 204).json(new Response(null, true, result));
+        res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
     }
@@ -94,12 +99,35 @@ router.get('/:id', async function (req, res, next) {
     try {
         let { id } = req.params;
         id = parseInt(id);
-        if (isNaN(id) || id < 0) {
-            throw new ErrorHandler(400, "Id NaN.");
-        } else {
-            const result = await courseService.findOne({ id });
-            res.status(result !== null ? 200 : 204).json(new Response(null, true, result));
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
         }
+
+        const result = await courseService.findOneNotDoneOrActive({ id });
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:id/rating', async function (req, res, next) {
+    try {
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
+        }
+
+        const course = await courseService.findOneNotDoneOrActive({ id });
+        if (!course) {
+            throw new ErrorHandler(400, "Course is not exist.");
+        }
+
+        const result = await courseService.findRating(id);
+        Object.keys(result).forEach(key => {
+            result[key] = parseInt(result[key]);
+        })
+        res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
     }
@@ -109,10 +137,10 @@ router.get('/:id/feedbacks', async function (req, res, next) {
     try {
         let { id } = req.params;
         id = parseInt(id);
-        if (isNaN(id) || id < 0) {
-            throw new ErrorHandler(400, "Id NaN.");
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
         }
-        const currentCourse = await courseService.findOne({ id });
+        const currentCourse = await courseService.findOneNotDoneOrActive({ id });
         if (currentCourse === null) {
             throw new ErrorHandler(404, "Course is not existed.");
         }
@@ -120,47 +148,75 @@ router.get('/:id/feedbacks', async function (req, res, next) {
         page = getPageQuery(page);
         limit = getLimitQuery(limit);
         const result = await feedbackService.findAll(page, limit, id);
-        res.status(result.rows.length !== 0 ? 200 : 204).json(new PageResponse(null, true, result, page, limit));
+        res.status(200).json(new PageResponse(null, true, result, page, limit));
 
     } catch (error) {
         next(error);
     }
 });
 
-router.get('/:id/enroll', require('../middlewares/auth.mdw'),async function (req,res,next){
-    try{
+router.get('/:id/chapters', async function (req, res, next) {
+    try {
         let { id } = req.params;
         id = parseInt(id);
-        if (isNaN(id) || id < 0) {
-            throw new ErrorHandler(400, "Id NaN.");
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
         }
-        const currentCourse = await courseService.findOne({ id });
+        const currentCourse = await courseService.findOneNotDoneOrActive({ id });
+        if (currentCourse === null) {
+            throw new ErrorHandler(404, "Course is not existed.");
+        }
+        let { page, limit } = req.query;
+        page = getPageQuery(page);
+        limit = getLimitQuery(limit);
+        const result = await chapterService.findAll(page, limit, id);
+        res.status(200).json(new PageResponse(null, true, result, page, limit));
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:id/enroll', require('../middlewares/auth.mdw'), async function (req, res, next) {
+    try {
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
+        }
+        const currentCourse = await courseService.findOneNotDoneOrActive({ id });
         if (currentCourse === null) {
             throw new ErrorHandler(404, "Course is not existed.");
         }
         let userId = req.accessTokenPayload.userId;
         const result = await enrollListsService.GetEnrollCourseInfo(id, userId);
-        res.status(200).json(new Response(null,true,result));
-    }catch(error){
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
         next(error);
     }
 });
 
-router.post('/:id/enroll', require('../middlewares/auth.mdw') ,async function (req,res,next){
-    try{
+router.post('/:id/enroll', require('../middlewares/auth.mdw'), async function (req, res, next) {
+    try {
         let { id } = req.params;
         id = parseInt(id);
-        if (isNaN(id) || id < 0) {
-            throw new ErrorHandler(400, "Id NaN.");
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
         }
-        const currentCourse = await courseService.findOne({ id });
+        const currentCourse = await courseService.findOneNotDoneOrActive({ id });
         if (currentCourse === null) {
             throw new ErrorHandler(404, "Course is not existed.");
         }
         let userId = req.accessTokenPayload.userId;
+        const checkEnroll = await enrollListsService.findOne({ createdBy: userId, courseId: id })
+        if (checkEnroll) {
+            throw new ErrorHandler(400, "User has already enrolled this course.");
+        }
         const result = await enrollListsService.EnrollCourses(id, userId);
-        res.status(200).json(new Response(null,true,result));
-    }catch(error){
+        await courseService.updateEnrolled(currentCourse);
+        await catService.updateEnrolled(currentCourse.categoryId)
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
         next(error);
     }
 });
@@ -201,13 +257,19 @@ router.put('/',
             const entity = req.body;
             const id = entity.id;
 
-            const dbEntity = await courseService.findOne({ id, status: STATUS.active });
+            const dbEntity = await courseService.findOneNotDoneOrActive({ id });
+
             if (!dbEntity) {
                 throw new ErrorHandler(404, "Course is not existed.");
             }
 
+            if (payload.type !== USER_TYPE.admin &&
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
+                throw new ErrorHandler(403, "Permission denied.");
+            }
+
             if (entity.categoryId) {
-                const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active })
+                const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active });
                 if (checkCategory === null) {
                     throw new ErrorHandler(404, "Category is not existed.");
                 }
@@ -231,17 +293,26 @@ router.delete('/:id',
             const currentUser = { userId: payload.userId };
 
             const id = parseInt(req.params.id);
+            if (isNaN(id) || id < 1) {
+                throw new ErrorHandler(400, "Invalid Id.");
+            }
 
-            const dbEntity = await courseService.findOne({ id, status: STATUS.active });
+            const dbEntity = await courseService.findOneNotDoneOrActive({ id });
+
             if (dbEntity === null) {
                 throw new ErrorHandler(404, "Course is not existed.");
+            }
+
+            if (payload.type !== USER_TYPE.admin &&
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
+                throw new ErrorHandler(403, "Permission denied.");
             }
 
             await courseService.update(dbEntity, {
                 status: STATUS.deleted,
                 updatedBy: currentUser.userId
             });
-            res.status(204).json();
+            res.status(200).json(new Response(null, true, null));
         } catch (error) {
             next(error);
         }

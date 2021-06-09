@@ -24,6 +24,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
+      total_rating: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
       picture: {
         type: Sequelize.TEXT,
       },

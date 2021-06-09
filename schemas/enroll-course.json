@@ -2,14 +2,18 @@
     "required": [],
     "additionalProperties": true,
     "properties": {
-        "watching":{
+        "watching": {
             "type": "number"
         },
-        "done":{
+        "done": {
             "type": "string"
         },
-        "status":{
+        "status": {
             "type": "number"
+        },
+        "courseId": {
+            "type": "integer",
+            "minimum": 1
         }
     }
 }

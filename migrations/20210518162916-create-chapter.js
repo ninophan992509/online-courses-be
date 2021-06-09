@@ -17,6 +17,7 @@ module.exports = {
       },
       is_previewed: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       status: {
         type: Sequelize.INTEGER,

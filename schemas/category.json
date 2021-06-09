@@ -6,13 +6,6 @@
     "properties": {
         "category_name": {
             "type": "string"
-        },
-        "status": {
-            "enum": [
-                -1,
-                0,
-                1
-            ]
         }
     }
 }

@@ -138,27 +138,45 @@ categories/
     ```
     GET '/'
     ```
+    Query:
+    * `page` (number): page number
+    * `limit` (number): item per page
     Response:
     ```
     {
-        "count": 6,
-        "rows": [
-            {
-                "id": 1,
-                "category_name": "JAVA",
-                "status": 1,
-                "number_enrolled": 0,
-                "createdBy": 1,
-                "updatedBy": 1,
-                "createdAt": "2021-06-03T08:11:17.000Z",
-                "updatedAt": "2021-06-03T08:16:30.000Z"
-            },
-            ...
-        ]
+        "message": null,
+        "code": true,
+        "data": {
+            "count": 6,
+            "rows": [
+                {
+                    "id": 2,
+                    "category_name": "C++",
+                    "status": 1,
+                    "number_enrolled": 0,
+                    "createdBy": 1,
+                    "updatedBy": 1,
+                    "createdAt": "2021-06-03T08:11:17.000Z",
+                    "updatedAt": "2021-06-03T08:11:17.000Z"
+                }
+            ]
+        },
+        "pageNumber": 2,
+        "pageSize": 1
     }
     ```
 
-* Create new category:
+* Get categories which have the most enrollments this week:
+    ```
+    GET '/most-enroll-this-week'
+    ```
+
+    Response:
+    ```
+   
+    ```
+
+* Create new category (admin):
     ```
     POST '/'
     ```
@@ -166,65 +184,243 @@ categories/
     Body:
     ```
     {
-        "category_name":"ANGULAR"
+        "category_name":"ANGULAR 3"
     }
     ```
 
     Response:
     ```
     {
-        "id": 6,
-        "category_name": "ANGULAR",
-        "createdBy": 1,
-        "status": 1,
-        "updatedAt": "2021-06-03T08:12:41.465Z",
-        "createdAt": "2021-06-03T08:12:41.465Z"
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 8,
+            "category_name": "ANGULAR 3",
+            "createdBy": 2,
+            "status": 1,
+            "number_enrolled": 0,
+            "updatedAt": "2021-06-08T03:17:39.153Z",
+            "createdAt": "2021-06-08T03:17:39.153Z"
+        }
     }
     ```
-* Edit category:
+
+* Edit category (admin):
     ```
     PUT '/'
     ```
     Body:
     ```
     {
-        "id": 1,
+        "id": 2,
         "category_name":"JAVA 8"
     }
     ```
     Response:
     ```
     {
-        "id": 1,
-        "category_name": "JAVA 8",
-        "status": 1,
-        "number_enrolled": 0,
-        "createdBy": 1,
-        "updatedBy": 1,
-        "createdAt": "2021-06-03T08:11:17.000Z",
-        "updatedAt": "2021-06-03T08:44:19.965Z"
-    }  
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 2,
+            "category_name": "JAVA 8",
+            "status": 1,
+            "number_enrolled": 0,
+            "createdBy": 1,
+            "updatedBy": 2,
+            "createdAt": "2021-06-03T08:11:17.000Z",
+            "updatedAt": "2021-06-08T03:18:46.073Z"
+        }
+    }
     ```
-* Delete category:
+
+* Delete category (admin):
     ```
     DELETE '/:id'
     ```
 
 ## Course
+```
+courses/
+```
 * Get course:
     ```
     GET '/'
     ```
     Query
 
-    * `page`: page number (default: 1)
-    * `limit`: number of course per page (default: 10)
-    * `categoryId`
+    * `page` (number): page number (default: 1)
+    * `limit` (number): number of course per page (default: 10)
+    * `categoryId` (number)
     
     Example:
     ```
-    http://localhost:3000/api/courses?limit=2&categoryId=1
+    http://localhost:3000/api/courses?limit=2&page=2
     ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "count": 5,
+            "rows": [
+                {
+                    "id": 3,
+                    "course_name": "ASP.NET Window tool",
+                    "categoryId": 3,
+                    "picture": null,
+                    "description": "This is a course to create a tool with ASP.NET",
+                    "number_enrolled": 0,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "tuition_fee": 3000,
+                    "sale": null,
+                    "status": 1,
+                    "teacherId": 1,
+                    "createdBy": null,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z",
+                    "isNew": true,
+                    "isMostEnrolled": true,
+                    "isHighlight": true
+                },
+                {
+                    "id": 4,
+                    "course_name": "Create first ReactJS app",
+                    "categoryId": 6,
+                    "picture": null,
+                    "description": "This is a course to create the first app with ReactJS",
+                    "number_enrolled": 0,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "tuition_fee": 1500,
+                    "sale": null,
+                    "status": 1,
+                    "teacherId": 1,
+                    "createdBy": null,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z",
+                    "isNew": true,
+                    "isMostEnrolled": true,
+                    "isHighlight": true
+                }
+            ]
+        },
+        "pageNumber": 2,
+        "pageSize": 2
+    }
+    ```
+
+* Get newest course list:
+    ```
+    GET '/newest'
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "count": 5,
+            "rows": [
+                {
+                    "id": 1,
+                    "course_name": "Java Basic",
+                    "categoryId": 1,
+                    "picture": null,
+                    "description": "This is an java basic course",
+                    "number_enrolled": 0,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "tuition_fee": 2300,
+                    "sale": null,
+                    "status": 1,
+                    "teacherId": 1,
+                    "createdBy": null,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z"
+                },
+                {
+                    "id": 2,
+                    "course_name": "Angular for beginer",
+                    "categoryId": 5,
+                    "picture": null,
+                    "description": "This is an Angular basic course",
+                    "number_enrolled": 0,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "tuition_fee": 2000,
+                    "sale": null,
+                    "status": 1,
+                    "teacherId": 1,
+                    "createdBy": null,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z"
+                },
+                {
+                    "id": 3,
+                    "course_name": "ASP.NET Window tool",
+                    "categoryId": 3,
+                    "picture": null,
+                    "description": "This is a course to create a tool with ASP.NET",
+                    "number_enrolled": 0,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "tuition_fee": 3000,
+                    "sale": null,
+                    "status": 1,
+                    "teacherId": 1,
+                    "createdBy": null,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z"
+                },
+                {
+                    "id": 4,
+                    "course_name": "Create first ReactJS app",
+                    "categoryId": 6,
+                    "picture": null,
+                    "description": "This is a course to create the first app with ReactJS",
+                    "number_enrolled": 0,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "tuition_fee": 1500,
+                    "sale": null,
+                    "status": 1,
+                    "teacherId": 1,
+                    "createdBy": null,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z"
+                },
+                {
+                    "id": 5,
+                    "course_name": "RESTful API with NodeJS",
+                    "categoryId": 4,
+                    "picture": null,
+                    "description": "This is a course to create a RESTful API backend using NodeJS",
+                    "number_enrolled": 0,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "tuition_fee": 3000,
+                    "sale": null,
+                    "status": 1,
+                    "teacherId": 1,
+                    "createdBy": null,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z"
+                }
+            ]
+        }
+    }
+    ```
+
 
 * Get list highlight courses:
     ```
@@ -294,6 +490,140 @@ categories/
     }
     ```
 
+* Create new course (admin, teacher):
+    ```
+    POST `/`
+    ```
+    Body:
+    ```
+    {
+        "course_name": "Java Framework 7",
+        "picture": "string",
+        "tuition_fee": 2300,
+        "description": "abc",
+        "category_id": 3
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 6,
+            "course_name": "Java Framework 7",
+            "picture": "string",
+            "tuition_fee": 2300,
+            "description": "abc",
+            "categoryId": 3,
+            "createdBy": 4,
+            "status": 1,
+            "number_enrolled": 0,
+            "sale": 0,
+            "updatedAt": "2021-06-08T03:43:56.978Z",
+            "createdAt": "2021-06-08T03:43:56.978Z"
+        }
+    }
+    ```
+
+* Edit course (admin, teacher who created course):
+    ```
+    PUT '/'
+    ```
+    Body:
+    ```
+    {
+        "id": 2,
+        "description": "test edit"
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 2,
+            "course_name": "Angular for beginer",
+            "categoryId": 5,
+            "picture": null,
+            "description": "test edit",
+            "number_enrolled": 0,
+            "rating": 0,
+            "number_rating": 0,
+            "tuition_fee": 2000,
+            "sale": null,
+            "status": 1,
+            "teacherId": 1,
+            "createdBy": null,
+            "updatedBy": 4,
+            "createdAt": "2021-06-05T08:44:00.000Z",
+            "updatedAt": "2021-06-08T03:47:07.962Z"
+        }
+    }
+    ```
+
+* Delete course (admin, teacher who created course):
+    ```
+    DELETE '/:id'
+    ```
+
+* Get one course:
+    ```
+    GET '/:id'
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 2,
+            "course_name": "Angular for beginer",
+            "categoryId": 5,
+            "picture": null,
+            "description": "test edit",
+            "number_enrolled": 0,
+            "rating": 0,
+            "number_rating": 0,
+            "tuition_fee": 2000,
+            "sale": null,
+            "status": 1,
+            "teacherId": 1,
+            "createdBy": null,
+            "updatedBy": 4,
+            "createdAt": "2021-06-05T08:44:00.000Z",
+            "updatedAt": "2021-06-08T03:47:07.000Z"
+        }
+    }
+    ```
+
+* Get feedbacks of course:
+    ```
+    '/:id/feedbacks'
+    ```
+    Query:
+    * `page`: page number
+    * `limit`: number item per page
+    Example:
+    ```
+    http://localhost:3000/api/courses/3/feedbacks
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "count": 0,
+            "rows": []
+        },
+        "pageNumber": 1,
+        "pageSize": 10
+    }
+    ```
+
+
 * Get Enroll course
     ```
     GET '/:id/enroll'
@@ -322,6 +652,7 @@ categories/
         }
     }
     ```
+
 * Enroll course
     ```
     POST '/:id/enroll'

@@ -14,12 +14,6 @@
         "number_enrolled": {
             "type": "integer"
         },
-        "rating": {
-            "type": "number"
-        },
-        "number_rating": {
-            "type": "integer"
-        },
         "picture": {
             "type": "string"
         },
@@ -35,7 +29,8 @@
             "type": "string"
         },
         "categoryId": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 1
         },
         "status": {
             "enum": [
