@@ -15,20 +15,6 @@ exports.findOne = async function (whereObject) {
     });
 }
 
-exports.findNewest = async function () {
-    return await Feedbacks.findAndCountAll({
-        where: {
-            status: STATUS.active
-        },
-        order: [
-            ['createdAt', 'DESC']
-        ],
-        limit: 10,
-        offset: 0,
-    });
-}
-
-
 exports.findAll = async function (page, limit, courseId) {
     const whereObj = { status: STATUS.active }
     if (courseId) {
@@ -39,17 +25,6 @@ exports.findAll = async function (page, limit, courseId) {
         limit,
         offset: (page - 1) * limit,
     });
-}
-
-exports.checkEnrollCourse = async function (courseId, userId) {
-    const result = await db.sequelize.query(
-        'SELECT case when COUNT(*) > 0 then true else false end as isRegister FROM enroll_lists el where el.createdBy = $userId AND el.courseId = $courseId',
-        {
-            bind: { courseId, userId },
-            type: QueryTypes.SELECT
-        }
-    );
-    return result[0];
 }
 
 

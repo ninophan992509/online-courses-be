@@ -15,7 +15,7 @@ exports.getPageQuery = function (page) {
     }
     try {
         page = parseInt(page);
-        if (page < 0) {
+        if (page < 1) {
             page = 1;
         }
         return page;
@@ -31,28 +31,12 @@ exports.getLimitQuery = function (limit) {
     }
     try {
         limit = parseInt(limit);
-        if (limit < 0) {
+        if (limit < 1) {
             limit = 1;
         }
         return limit;
     } catch (ex) {
         console.error("Trying to parse limit query", ex);
         return DEFAULT_LIMIT;
-    }
-}
-
-exports.getCategoryQuery = function (categoryId) {
-    if (categoryId === undefined || categoryId === "") {
-        return null;
-    }
-    try {
-        categoryId = parseInt(categoryId);
-        if (categoryId < 0) {
-            categoryId = null;
-        }
-        return categoryId;
-    } catch (ex) {
-        console.error("Trying to parse category id query", ex);
-        return null;
     }
 }

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const feedbackSchema = require('../schemas/feedback.json');
+const chapterSchema = require('../schemas/chapter.json');
+const chapterService = require('../services/chapter.service');
 const courseService = require('../services/course.service');
-const feedbackService = require('../services/feedback.service');
 const { ErrorHandler } = require('../exceptions/error');
 const { Response, PageResponse } = require('../response/response');
 const STATUS = require('../enums/status.enum');
@@ -19,13 +19,15 @@ const {
     getLimitQuery,
     getPageQuery,
 } = require('../utils');
+const db = require('../models');
 
 router.post('/',
     validateAuth,
-    validateSchema(feedbackSchema),
+    validateSchema(chapterSchema),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
+            const currentUser = { userId: payload.userId };
             const entity = req.body;
 
             entity.createdBy = payload.userId;
@@ -36,24 +38,12 @@ router.post('/',
                 throw new ErrorHandler(404, "Course is not existed.");
             }
 
-            // check enrolled to create feedback
-            const checkEnroll = await courseService.checkEnrollCourse(entity.courseId, payload.userId);
-            if (checkEnroll.isRegister === 0) {
-                throw new ErrorHandler(400, "Enroll before feedback.");
+            if (payload.type !== USER_TYPE.admin &&
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== checkCourse.teacherId)) {
+                throw new ErrorHandler(403, "Permission denied.");
             }
 
-            const dbEntity = await feedbackService.findOne({
-                createdBy: payload.userId,
-                courseId: entity.courseId,
-                status: STATUS.active
-            });
-            if (dbEntity) {
-                throw new ErrorHandler(400, "One feedback per person per course.");
-            }
-
-            await courseService.updateRating(checkCourse, entity, 1);
-
-            const result = await feedbackService.create(entity);
+            const result = await chapterService.create(entity);
             res.status(201).json(new Response(null, true, result));
         } catch (error) {
             next(error);
@@ -76,7 +66,7 @@ router.get('/',
             if (checkCourse === null) {
                 throw new ErrorHandler(404, "Course is not existed.");
             }
-            const result = await feedbackService.findAll(page, limit, courseId);
+            const result = await chapterService.findAll(page, limit, courseId);
             res.status(200).json(new PageResponse(null, true, result, page, limit));
         } catch (error) {
             next(error);
@@ -84,6 +74,7 @@ router.get('/',
     }
 );
 
+// get all document and video
 router.get('/:id', async function (req, res, next) {
     try {
         let { id } = req.params;
@@ -91,7 +82,7 @@ router.get('/:id', async function (req, res, next) {
         if (isNaN(id) || id < 1) {
             throw new ErrorHandler(400, "Invalid Id.")
         }
-        const result = await feedbackService.findOne({ id, status: STATUS.active });
+        const result = await chapterService.findRelated({ id, status: STATUS.active });
         res.status(200).json(new Response(null, true, result));
     } catch (ex) {
         next(ex);
@@ -100,23 +91,24 @@ router.get('/:id', async function (req, res, next) {
 
 
 router.put('/',
-    validateAuth,
-    validateSchema(getPutSchema(feedbackSchema)),
+    require('../middlewares/auth.mdw'),
+    require('../middlewares/auth.roles.mdw')([USER_TYPE.admin, USER_TYPE.teacher]),
+    require('../middlewares/validate.mdw')(getPutSchema(chapterSchema)),
     async function (req, res, next) {
         try {
             const payload = req.accessTokenPayload;
             const currentUser = { userId: payload.userId };
 
             const entity = req.body;
-            const id = entity.id;
-            if (isNaN(id) || id < 1) throw new ErrorHandler(400, "Invalid Id.");
 
-            const dbEntity = await feedbackService.findOne({ id, status: STATUS.active });
+            const dbEntity = await chapterService.findOne({ id: entity.id, status: STATUS.active });
+
             if (!dbEntity) {
-                throw new ErrorHandler(404, "Feedback is not existed.");
+                throw new ErrorHandler(404, "Chapter is not existed.");
             }
 
-            if (currentUser.userId !== dbEntity.createdBy) {
+            if (payload.type !== USER_TYPE.admin &&
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
                 throw new ErrorHandler(403, "Permission denied.");
             }
 
@@ -124,17 +116,8 @@ router.put('/',
                 throw new ErrorHandler(400, "Can not change courseId.");
             }
 
-            const checkCourse = await courseService.findOneNotDoneOrActive({ id: dbEntity.courseId });
-            const oldRating = dbEntity.rating;
-
             const newEntity = { ...entity, updatedBy: currentUser.userId };
-            delete newEntity.courseId;
-            const result = await feedbackService.update(dbEntity, newEntity);
-
-            if (newEntity.rating) {
-                courseService.updateRating(checkCourse, newEntity, 0, { rating: oldRating });
-            }
-
+            const result = await chapterService.update(dbEntity, newEntity);
             res.status(200).json(new Response(null, true, result));
         } catch (error) {
             next(error);
@@ -144,35 +127,39 @@ router.put('/',
 
 router.delete('/:id',
     validateAuth,
+    validateRoles([USER_TYPE.admin, USER_TYPE.teacher]),
     async function (req, res, next) {
         try {
-            const id = parseInt(req.params.id);
-            if (isNaN(id) || id < 1) throw new ErrorHandler(400, "Invalid Id.");
-
-            const dbEntity = await feedbackService.findOne({ id, status: STATUS.active });
-            if (dbEntity === null) {
-                throw new ErrorHandler(400, "Feedback is not existed.");
-            }
-
             const payload = req.accessTokenPayload;
             const currentUser = { userId: payload.userId };
 
+            const id = parseInt(req.params.id);
+
+            if (isNaN(id) || id < 1) {
+                throw new ErrorHandler(400, "Invalid Id.");
+            }
+
+            const dbEntity = await chapterService.findRelated({ id, status: STATUS.active });
+
+            if (dbEntity === null) {
+                throw new ErrorHandler(404, "Chapter is not existed.");
+            }
+
+            if (dbEntity.videos.length > 0) {
+                throw new ErrorHandler(404, "Remove ralated videos first.");
+            }
+
+            if (dbEntity.documents.length > 0) {
+                throw new ErrorHandler(404, "Remove ralated documents first.");
+            }
+
             if (payload.type !== USER_TYPE.admin &&
-                (currentUser.userId !== dbEntity.createdBy)) {
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
                 throw new ErrorHandler(403, "Permission denied.");
             }
 
-            const checkCourse = await courseService.findOneNotDoneOrActive({
-                id: dbEntity.courseId
-            });
-            if (checkCourse === null) {
-                throw new ErrorHandler(404, "Course is not existed.");
-            }
-
-            const oldRating = dbEntity.rating;
-            await feedbackService.update(dbEntity, { status: STATUS.deleted, updatedBy: currentUser.userId });
-            await courseService.updateRating(checkCourse, { rating: oldRating }, -1);
-
+            //kiểm tra nếu còn document hoặc videos thuộc chapter này => ko xóa
+            chapterService.update(dbEntity, { updatedBy: currentUser.userId, status: STATUS.deleted });
             res.status(200).json(new Response(null, true, null));
         } catch (error) {
             next(error);

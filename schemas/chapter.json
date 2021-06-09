@@ -1,26 +1,21 @@
 {
     "required": [
-        "title",
-        "content",
-        "rating",
+        "chapter_name",
         "courseId"
     ],
     "additionalProperties": false,
     "properties": {
-        "title": {
+        "chapter_name": {
             "type": "string"
         },
-        "content": {
-            "type": "string"
-        },
-        "rating": {
+        "is_previewed": {
             "enum": [
-                1,
-                2,
-                3,
-                4,
-                5
+                0,
+                1
             ]
+        },
+        "description": {
+            "type": "string"
         },
         "courseId": {
             "type": "integer",

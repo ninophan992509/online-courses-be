@@ -52,7 +52,7 @@ router.get('/', validateGetQuery(getQuerySchema), async function (req, res, next
         page = getPageQuery(page);
         limit = getLimitQuery(limit);
         const result = await categoryService.findAll(page, limit);
-        res.status(result.rows.length !== 0 ? 200 : 204).json(new PageResponse(null, true, result, page, limit));
+        res.status(200).json(new PageResponse(null, true, result, page, limit));
     } catch (error) {
         next(error);
     }
@@ -105,6 +105,10 @@ router.delete('/:id',
 
             const id = parseInt(req.params.id);
 
+            if (isNaN(id) || id < 1) {
+                throw new ErrorHandler(400, "Invalid Id.");
+            }
+
             const existCourse = await courseService.findOne({
                 categoryId: id,
                 status: STATUS.active
@@ -122,7 +126,7 @@ router.delete('/:id',
                 status: STATUS.deleted,
                 updatedBy: currentUser.userId
             });
-            res.status(204).json();
+            res.status(200).json(new Response(null, true, null));
         } catch (error) {
             next(error);
         }

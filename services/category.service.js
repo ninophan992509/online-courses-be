@@ -30,6 +30,12 @@ exports.update = async function (dbEntity, updateEntity) {
     return await dbEntity.update(updateEntity);
 }
 
+exports.updateEnrolled = async function (categoryId) {
+    const dbEntity = await exports.findOne({ id: categoryId });
+    const newNumberEnrolled = dbEntity.number_enrolled + 1;
+    return await dbEntity.update({ number_enrolled: newNumberEnrolled });
+}
+
 exports.findMostEnrollInWeek = async function () {
     const result = await db.sequelize.query(
         ` SELECT c2.*, COUNT(*) as numberEnrollThisWeek` +

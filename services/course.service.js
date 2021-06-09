@@ -18,10 +18,21 @@ exports.findOne = async function (whereObject) {
     });
 }
 
+
+exports.findOneNotDoneOrActive = async function (whereObject) {
+    return await Courses.findOne({
+        where: {
+            ...whereObject, status: {
+                [Op.or]: [STATUS.active, STATUS.notDone]
+            }
+        }
+    });
+}
+
 exports.findNewest = async function () {
     return await Courses.findAndCountAll({
         where: {
-            status: STATUS.active
+            status: { [Op.or]: [STATUS.active, STATUS.notDone] }
         },
         order: [
             ['createdAt', 'DESC']
@@ -35,7 +46,7 @@ exports.findNewest = async function () {
 exports.findMostEnrolled = async function () {
     return await Courses.findAndCountAll({
         where: {
-            status: STATUS.active
+            status: { [Op.or]: [STATUS.active, STATUS.notDone] }
         },
         order: [
             ['number_enrolled', 'DESC']
@@ -47,7 +58,7 @@ exports.findMostEnrolled = async function () {
 
 
 exports.findAll = async function (page, limit, categoryId) {
-    const whereObj = { status: STATUS.active }
+    const whereObj = { status: { [Op.or]: [STATUS.active, STATUS.notDone] } }
     if (categoryId) {
         whereObj.categoryId = categoryId;
     }
@@ -180,6 +191,17 @@ exports.getListMostViewsCourses = async function () {
     const result = await db.sequelize.query(
         "select c.* from watch_lists as w inner join courses as c on w.courseId = c.id group by courseId order by count(w.courseId) desc limit 4",
         QueryTypes.SELECT
+    );
+    return result[0];
+}
+
+exports.checkEnrollCourse = async function (courseId, userId) {
+    const result = await db.sequelize.query(
+        'SELECT case when COUNT(*) > 0 then true else false end as isRegister FROM enroll_lists el where el.createdBy = $userId AND el.courseId = $courseId',
+        {
+            bind: { courseId, userId },
+            type: QueryTypes.SELECT
+        }
     );
     return result[0];
 }

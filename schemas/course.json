@@ -29,7 +29,8 @@
             "type": "string"
         },
         "categoryId": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 1
         },
         "status": {
             "enum": [

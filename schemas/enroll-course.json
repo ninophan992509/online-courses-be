@@ -5,7 +5,8 @@
     "additionalProperties": true,
     "properties": {
         "courseId": {
-            "type": "number"
+            "type": "number",
+            "minimum": 1
         }
     }
 }
