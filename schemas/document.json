@@ -1,0 +1,19 @@
+{
+    "required": [
+        "title",
+        "chapterId"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "chapterId": {
+            "type": "integer",
+            "minimum": 1
+        }
+    }
+}
