@@ -57,10 +57,13 @@ exports.findMostEnrolled = async function () {
 }
 
 
-exports.findAll = async function (page, limit, categoryId) {
+exports.findAll = async function (page, limit, categoryId, teacherId) {
     const whereObj = { status: { [Op.or]: [STATUS.active, STATUS.notDone] } }
     if (categoryId) {
         whereObj.categoryId = categoryId;
+    }
+    if (teacherId) {
+        whereObj.teacherId = teacherId;
     }
     const result = await Courses.findAndCountAll({
         where: whereObj,
