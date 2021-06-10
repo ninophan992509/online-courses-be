@@ -100,10 +100,10 @@ router.put('/',
             const entity = req.body;
             const id = entity.id;
 
-            const dbEntity = await chapterService.findOne({ id, status: STATUS.active });
+            const dbEntity = await documentService.findOne({ id, status: STATUS.active });
 
             if (!dbEntity) {
-                throw new ErrorHandler(404, "Chapter is not existed.");
+                throw new ErrorHandler(404, "Document is not existed.");
             }
 
             if (payload.type !== USER_TYPE.admin &&

@@ -252,9 +252,7 @@ router.put('/:id/enroll', require('../middlewares/auth.mdw'), require('../middle
     }
 });
 
-/**
- * Get courses by categoryId
- */
+
 router.put('/',
     require('../middlewares/auth.mdw'),
     require('../middlewares/auth.roles.mdw')([USER_TYPE.admin, USER_TYPE.teacher]),
