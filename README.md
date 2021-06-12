@@ -232,6 +232,7 @@ categories/
     ```
     Response:
     ```
+    200 OK
     {
         "message": null,
         "code": true,
@@ -265,6 +266,7 @@ categories/
     ```
     Response:
     ```
+    200 OK
     {
         "message": null,
         "code": true,

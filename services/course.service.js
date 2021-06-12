@@ -3,7 +3,8 @@ const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes
 const EnrollList = require('../models/enroll_list')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
 const { Op, QueryTypes } = require('sequelize');
-
+const category = require('../models/category')(db.sequelize, db.Sequelize.DataTypes);
+const storage = require('./storage.service');
 const LIMIT = 10;
 const OFFSET = 0;
 
@@ -107,7 +108,7 @@ exports.getListHighlightCourses = async function () {
             }
         },
         limit: LIMIT,
-        order: [['rating', 'DESC']]
+        order: [['rating', 'DESC']],
     });
 }
 
