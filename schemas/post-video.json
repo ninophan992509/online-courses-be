@@ -1,0 +1,27 @@
+{
+    "required": [
+        "chapterId",
+        "link",
+        "title",
+        "description",
+        "time"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "chapterId": {
+            "type": "number"
+        },
+        "link": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "time": {
+            "type": "number"
+        }
+    }
+}

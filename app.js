@@ -22,9 +22,9 @@ app.use('/api/courses', require('./routes/courses.route'));
 
 app.use('/api/feedbacks', require('./routes/feedbacks.route'));
 
-app.use('/api/enroll-list', require('./middlewares/auth.mdw'), require('./routes/enroll-list.route'));
-
 app.use('/api/storage', require('./middlewares/auth.mdw'), require('./routes/storage.route'));
+
+app.use('/api/video', require('./middlewares/auth.mdw'), require('./routes/video.route'));
 
 app.use((err, req, res, next) => {
   console.log(err);

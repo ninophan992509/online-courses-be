@@ -1,10 +1,14 @@
 {
-    "required": [
-        "courseId"
-    ],
+    "required": [],
     "additionalProperties": true,
     "properties": {
-        "courseId": {
+        "watching": {
+            "type": "number"
+        },
+        "done": {
+            "type": "string"
+        },
+        "status": {
             "type": "number"
         }
     }

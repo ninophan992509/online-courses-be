@@ -292,10 +292,9 @@ categories/
     }
     ```
 
-## Enroll list
-* Enroll course
+* Get List enrolled courses
     ```
-    POST '/'
+    GET '/enrolled?page=1&limit=10'
     ```
     Headers:
     ```
@@ -303,10 +302,38 @@ categories/
         x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
     }
     ```
-    Body:
+    Response:
     ```
     {
-        "courseId":1
+        "message": null,
+        "code": true,
+        "data": [
+            {
+                "id": 1,
+                "course_name": "Java Basic",
+                ...
+            },
+            {
+                "id": 2,
+                "course_name": "Angular",
+                ...
+            }
+            ...
+        ],
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalPage": 1
+    }
+    ```
+
+* Enroll course
+    ```
+    GET '/:id/enroll'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
     }
     ```
     Response:
@@ -319,6 +346,72 @@ categories/
             "id": 17,
             "watching": 0,
             "done": "[]",
+            "status": 1,
+            "courseId": 1,
+            "createdBy": 1,
+            "updatedAt": "2021-06-05T16:13:45.925Z",
+            "createdAt": "2021-06-05T16:13:45.925Z"
+        }
+    }
+    ```
+
+* Get Enroll course information
+    ```
+    POST '/:id/enroll'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 17,
+            "watching": 0,
+            "done": "[]",
+            "status": 1,
+            "courseId": 1,
+            "createdBy": 1,
+            "updatedAt": "2021-06-05T16:13:45.925Z",
+            "createdAt": "2021-06-05T16:13:45.925Z"
+        }
+    }
+    ```
+
+* Update Enroll course information
+    ```
+    PUT '/:id/enroll'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Body:
+    ```
+    {
+        "watching": 2,
+        "done": "[1]",
+        "status": 1
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 17,
+            "watching": 2,
+            "done": "[1]",
             "status": 1,
             "courseId": 1,
             "createdBy": 1,
@@ -348,5 +441,80 @@ categories/
         "data": {
         "signedUrl": "https://storage.googleapis.com/online-course-316014.appspot.com/cf8de57b-6a80-452e-a0b5-ab0fcbec3218?X-Goog-Algorithm=GOOG4-RSA-SHA256&..."
         }
+    }
+    ```
+## Video
+* Get videos by chapterId
+    ```
+    GET '/by-chapterId/:chapterId'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": [
+            {
+                "id": 1,
+                "chapterId": 1,
+                "title": "test video",
+                "description": "this is a test video",
+                "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+                ...
+            },
+            {
+                "id": 2,
+                "chapterId": 1,
+                "title": "test video",
+                "description": "this is a test video",
+                "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+                ...
+            }
+        ]
+    }
+    ```
+
+* Post video
+    ```
+    POST '/'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Body:
+    ```
+    {
+        "chapterId": 1,
+        "title": "test video",
+        "description": "this is a test video",
+        "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+        "time": 100
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+    "message": null,
+    "code": true,
+    "data": {
+        "id": 3,
+        "chapterId": 1,
+        "title": "test video",
+        "description": "this is a test video",
+        "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+        "time": 100,
+        "createdBy": 1,
+        ...
     }
     ```
