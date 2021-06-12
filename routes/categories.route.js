@@ -29,9 +29,16 @@ router.post('/',
             const payload = req.accessTokenPayload;
             const entity = req.body;
 
-            const duplicate = await categoryService.findOne({ category_name: entity.category_name });
+            const duplicate = await categoryService.findOne({ category_name: entity.category_name, status: STATUS.active });
             if (duplicate) {
                 throw new ErrorHandler(400, "Category existed.");
+            }
+
+            if (entity.parentId) {
+                const check = await categoryService.findOne({ id: entity.parentId, status: STATUS.active });
+                if (!check) {
+                    throw new ErrorHandler(404, "Parent category is not existed.");
+                }
             }
 
             entity.createdBy = payload.userId;
@@ -53,6 +60,19 @@ router.get('/', validateGetQuery(getQuerySchema), async function (req, res, next
         limit = getLimitQuery(limit);
         const result = await categoryService.findAll(page, limit);
         res.status(200).json(new PageResponse(null, true, result, page, limit));
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:id', async function (req, res, next) {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
+        }
+        const result = await categoryService.findOne({ id });
+        res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
     }
@@ -84,6 +104,14 @@ router.put('/',
             if (!dbEntity) {
                 throw new ErrorHandler(404, "Not exist entity");
             }
+
+            if (entity.parentId) {
+                const check = await categoryService.findOne({ id: entity.parentId, status: STATUS.active });
+                if (!check) {
+                    throw new ErrorHandler(404, "Parent category is not existed.");
+                }
+            }
+
             const result = await categoryService.update(dbEntity, {
                 category_name: entity.category_name,
                 updatedBy: currentUser.userId
@@ -109,17 +137,23 @@ router.delete('/:id',
                 throw new ErrorHandler(400, "Invalid Id.");
             }
 
+            const dbEntity = await categoryService.findOne({ id });
+
+            if (dbEntity === null) {
+                throw new ErrorHandler(404, "Category is not existed.");
+            }
+
+            if (dbEntity.categories.length > 0) {
+                throw new ErrorHandler(400, "Delete child category first.");
+            }
+
             const existCourse = await courseService.findOne({
                 categoryId: id,
                 status: STATUS.active
             });
+
             if (existCourse !== null) {
                 throw new ErrorHandler(404, "Course existed");
-            }
-
-            const dbEntity = await categoryService.findOne({ id, status: STATUS.active });
-            if (dbEntity === null) {
-                throw new ErrorHandler(404, "Category is not existed.");
             }
 
             const result = await categoryService.update(dbEntity, {

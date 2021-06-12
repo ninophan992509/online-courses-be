@@ -57,10 +57,11 @@ exports.findMostEnrolled = async function () {
 }
 
 
-exports.findAll = async function (page, limit, categoryId, teacherId) {
+exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
     const whereObj = { status: { [Op.or]: [STATUS.active, STATUS.notDone] } }
-    if (categoryId) {
-        whereObj.categoryId = categoryId;
+    console.log(">> ~ file: course.service.js ~ line 63 ~ lstCategoryId", lstCategoryId);
+    if (lstCategoryId.length > 0) {
+        whereObj.categoryId = { [Op.or]: lstCategoryId };
     }
     if (teacherId) {
         whereObj.teacherId = teacherId;

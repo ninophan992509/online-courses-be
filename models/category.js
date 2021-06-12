@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       category_name: DataTypes.STRING,
       status: DataTypes.INTEGER,
       number_enrolled: DataTypes.INTEGER,
+      parentId: DataTypes.INTEGER,
       createdBy: DataTypes.INTEGER,
       updatedBy: DataTypes.INTEGER
     },

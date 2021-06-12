@@ -141,28 +141,121 @@ categories/
     Query:
     * `page` (number): page number
     * `limit` (number): item per page
+
+    Example query:
+    ```
+    http://localhost:3000/api/categories?limit=2&page=2
+    ```
     Response:
     ```
     {
         "message": null,
         "code": true,
         "data": {
-            "count": 6,
+            "count": 8,
             "rows": [
                 {
-                    "id": 2,
-                    "category_name": "C++",
+                    "id": 3,
+                    "category_name": "ASP.NET",
                     "status": 1,
-                    "number_enrolled": 0,
+                    "number_enrolled": 3,
+                    "parentId": null,
                     "createdBy": 1,
                     "updatedBy": 1,
                     "createdAt": "2021-06-03T08:11:17.000Z",
-                    "updatedAt": "2021-06-03T08:11:17.000Z"
+                    "updatedAt": "2021-06-03T08:11:17.000Z",
+                    "categories": [
+                        {
+                            "id": 9,
+                            "category_name": "ASP.NET CORE",
+                            "status": 1,
+                            "number_enrolled": 0,
+                            "parentId": 3,
+                            "createdBy": 4,
+                            "updatedBy": null,
+                            "createdAt": "2021-06-12T09:07:43.000Z",
+                            "updatedAt": "2021-06-12T09:07:43.000Z"
+                        },
+                        {
+                            "id": 10,
+                            "category_name": "ASP.NET CORE CORE CORE",
+                            "status": 1,
+                            "number_enrolled": 0,
+                            "parentId": 3,
+                            "createdBy": 4,
+                            "updatedBy": null,
+                            "createdAt": "2021-06-12T09:08:37.000Z",
+                            "updatedAt": "2021-06-12T09:08:37.000Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "category_name": "NodeJs",
+                    "status": 1,
+                    "number_enrolled": 1,
+                    "parentId": null,
+                    "createdBy": 1,
+                    "updatedBy": 1,
+                    "createdAt": "2021-06-03T08:11:17.000Z",
+                    "updatedAt": "2021-06-03T08:11:17.000Z",
+                    "categories": []
                 }
             ]
         },
         "pageNumber": 2,
-        "pageSize": 1
+        "pageSize": 2
+    }
+    ```
+
+* Get category by id:
+    ```
+    GET '/:id'
+    ```
+    Example query:
+    ```
+    http://localhost:3000/api/categories/3
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 3,
+            "category_name": "ASP.NET",
+            "status": 1,
+            "number_enrolled": 3,
+            "parentId": null,
+            "createdBy": 1,
+            "updatedBy": 1,
+            "createdAt": "2021-06-03T08:11:17.000Z",
+            "updatedAt": "2021-06-03T08:11:17.000Z",
+            "categories": [
+                {
+                    "id": 9,
+                    "category_name": "ASP.NET CORE",
+                    "status": 1,
+                    "number_enrolled": 0,
+                    "parentId": 3,
+                    "createdBy": 4,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-12T09:07:43.000Z",
+                    "updatedAt": "2021-06-12T09:07:43.000Z"
+                },
+                {
+                    "id": 10,
+                    "category_name": "ASP.NET CORE CORE CORE",
+                    "status": 1,
+                    "number_enrolled": 0,
+                    "parentId": 3,
+                    "createdBy": 4,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-12T09:08:37.000Z",
+                    "updatedAt": "2021-06-12T09:08:37.000Z"
+                }
+            ]
+        }
     }
     ```
 
@@ -261,7 +354,7 @@ categories/
     Body:
     ```
     {
-        "id": 2,
+        "id": 11,
         "category_name":"JAVA 8"
     }
     ```
@@ -271,14 +364,16 @@ categories/
         "message": null,
         "code": true,
         "data": {
-            "id": 2,
+            "id": 11,
             "category_name": "JAVA 8",
             "status": 1,
             "number_enrolled": 0,
-            "createdBy": 1,
-            "updatedBy": 2,
-            "createdAt": "2021-06-03T08:11:17.000Z",
-            "updatedAt": "2021-06-08T03:18:46.073Z"
+            "parentId": null,
+            "createdBy": 4,
+            "updatedBy": 4,
+            "createdAt": "2021-06-12T09:27:52.000Z",
+            "updatedAt": "2021-06-12T10:33:11.272Z",
+            "categories": []
         }
     }
     ```

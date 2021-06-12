@@ -3,11 +3,24 @@ const Categories = require('../models/category')(db.sequelize, db.Sequelize.Data
 const STATUS = require('../enums/status.enum');
 const { QueryTypes } = require('sequelize');
 
+Categories.hasMany(Categories, { foreignKey: 'parentId' });
+Categories.belongsTo(Categories, { foreignKey: 'parentId' });
+
 exports.findAll = async function (page, limit) {
     return await Categories.findAndCountAll({
-        where: { status: STATUS.active },
+        where: { status: STATUS.active, parentId: null },
         limit,
-        offset: (page - 1) * limit
+        offset: (page - 1) * limit,
+        include: [
+            {
+                model: Categories,
+                where: {
+                    status: STATUS.active
+                },
+                required: false
+            }
+        ],
+        distinct: true,
     });
 }
 
@@ -15,14 +28,19 @@ exports.create = async function (entity) {
     return await Categories.create(entity);
 }
 
-/**
- * 
- * @param whereObject ex: {id: 1, category_name: "Little cat"}
- * @returns 1 category entity
- */
+
 exports.findOne = async function (whereObject) {
     return await Categories.findOne({
-        where: whereObject
+        where: whereObject,
+        include: [
+            {
+                model: Categories,
+                where: {
+                    status: STATUS.active
+                },
+                required: false
+            }
+        ]
     });
 }
 
@@ -33,6 +51,9 @@ exports.update = async function (dbEntity, updateEntity) {
 exports.updateEnrolled = async function (categoryId) {
     const dbEntity = await exports.findOne({ id: categoryId });
     const newNumberEnrolled = dbEntity.number_enrolled + 1;
+    const parent = await exports.findOnd({ id: dbEntity.parentId })
+    const newPE = parent.number_enrolled + 1;
+    await parent.update({ number_enrolled: newPE });
     return await dbEntity.update({ number_enrolled: newNumberEnrolled });
 }
 

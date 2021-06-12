@@ -16,6 +16,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
+      parentId: {
+        type: Sequelize.INTEGER,
+      },
       status: {
         type: Sequelize.INTEGER,
         allowNull: false,

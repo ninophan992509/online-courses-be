@@ -3,7 +3,7 @@ const router = express.Router();
 const courseSchema = require('../schemas/course.json');
 const enrollListSchema = require('../schemas/enroll-course.json');
 const getQuerySchema = require('../schemas/getQuery');
-const catService = require('../services/category.service');
+const categoryService = require('../services/category.service');
 const courseService = require('../services/course.service');
 const feedbackService = require('../services/feedback.service');
 const chapterService = require('../services/chapter.service');
@@ -36,9 +36,12 @@ router.post('/',
             entity.status = STATUS.notDone;
             entity.number_enrolled = 0;
             entity.sale = entity.sale ? entity.sale : 0;
-            const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active });
+            const checkCategory = await categoryService.findOne({ id: entity.categoryId, status: STATUS.active });
             if (checkCategory === null) {
                 throw new ErrorHandler(404, "Category is not existed.");
+            }
+            if (checkCategory.parentId !== null) {
+                throw new ErrorHandler(400, "Add only level 2 category.");
             }
             const result = await courseService.create(entity);
             res.status(201).json(new Response(null, true, result));
@@ -56,20 +59,36 @@ router.get('/',
             page = getPageQuery(page);
             limit = getLimitQuery(limit);
 
+            let lstCategoryId = [];
+
             if (categoryId) {
                 categoryId = parseInt(categoryId);
-                if (isNaN(categoryId) && categoryId < 1) {
+                if (isNaN(categoryId) || categoryId < 1) {
                     throw new ErrorHandler(400, "Invalid categoryId.");
+                }
+                const category = await categoryService.findOne({ id: categoryId });
+                if (!category) {
+                    throw new ErrorHandler(400, "Category is not exist.");
+                }
+                if (category.parentId) {
+                    lstCategoryId.push(categoryId);
+                } else {
+                    if (category.categories.length === 0) {
+                        throw new ErrorHandler(400, "Level 1 category has no child category.");
+                    }
+                    category.categories.forEach(item => {
+                        lstCategoryId.push(item.id);
+                    });
                 }
             }
             if (teacherId) {
                 teacherId = parseInt(teacherId);
-                if (isNaN(teacherId) && teacherId < 1) {
+                if (isNaN(teacherId) || teacherId < 1) {
                     throw new ErrorHandler(400, "Invalid teacherId.");
                 }
             }
 
-            const result = await courseService.findAll(page, limit, categoryId, teacherId);
+            const result = await courseService.findAll(page, limit, lstCategoryId, teacherId);
             res.status(200).json(new PageResponse(null, true, result, page, limit));
         } catch (error) {
             next(error);
@@ -103,7 +122,6 @@ router.get('/most-views', async function (req, res, next) {
         next(error);
     }
 });
-
 
 router.get('/:id', async function (req, res, next) {
     try {
@@ -224,7 +242,7 @@ router.post('/:id/enroll', require('../middlewares/auth.mdw'), async function (r
         }
         const result = await enrollListsService.EnrollCourses(id, userId);
         await courseService.updateEnrolled(currentCourse);
-        await catService.updateEnrolled(currentCourse.categoryId)
+        await categoryService.updateEnrolled(currentCourse.categoryId)
         res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
@@ -277,9 +295,12 @@ router.put('/',
             }
 
             if (entity.categoryId) {
-                const checkCategory = await catService.findOne({ id: entity.categoryId, status: STATUS.active });
+                const checkCategory = await categoryService.findOne({ id: entity.categoryId, status: STATUS.active });
                 if (checkCategory === null) {
                     throw new ErrorHandler(404, "Category is not existed.");
+                }
+                if (!checkCategory.parentId) {
+                    throw new ErrorHandler(400, "Add only level 2 category.")
                 }
             }
 
