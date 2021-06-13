@@ -15,7 +15,7 @@ localhost:3000/api/
 
 ## Authentication
 ```
-auth/
+/auth
 ```
 * Register:
     ```
@@ -667,6 +667,7 @@ courses/
         }
     }
     ```
+
 * Get List enrolled courses
     ```
     GET '/enrolled?page=1&limit=10'
@@ -1305,6 +1306,9 @@ courses/
     }
     ```
 ## Storage
+```
+/storage
+```
 * Get Upload URL
     ```
     GET '/upload-url'
@@ -1327,6 +1331,9 @@ courses/
     }
     ```
 ## Video
+```
+/video
+```
 * Get videos by chapterId
     ```
     GET '/by-chapterId/:chapterId'
