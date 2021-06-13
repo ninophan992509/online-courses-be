@@ -127,6 +127,15 @@ router.get('/most-views', async function (req, res, next) {
     }
 });
 
+router.get('/most-enrolled', async function(req, res, next){
+    try {
+        const result = await courseService.GetListMostEnrollInWeek();
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function(req,res, next){
     try {
         let { page, limit } = req.query;

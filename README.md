@@ -533,6 +533,36 @@ courses/
     }
     ```
 
+* Get list most enrolled courses in week:
+    ```
+    GET '/most-enrolled'
+    ```
+    Example:
+    ```
+    http://localhost:3000/api/courses/most-enrolled
+    ```
+    Response:
+    ```
+    200 OK
+    {
+        "message": null,
+        "code": true,
+        "data": [
+            {
+                "id": 1,
+                "course_name": "Windows 10",
+                "categoryId": 2,
+                "picture": "",
+                "description": "abc",
+                "number_enrolled": 0,
+                "rating": 0,
+                ...
+            },
+            ...
+        ]
+    }
+    ```
+    
 * Create new course (admin, teacher):
     ```
     POST `/`

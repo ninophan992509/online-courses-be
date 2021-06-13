@@ -194,7 +194,14 @@ exports.getListHighlightCourses = async function () {
 
 exports.getListMostViewsCourses = async function () {
     const result = await db.sequelize.query(
-        "select c.* from watch_lists as w inner join courses as c on w.courseId = c.id group by courseId order by count(w.courseId) desc limit 4",
+        `select c.* 
+        from watch_lists as w 
+        inner join 
+        courses as c 
+        on w.courseId = c.id 
+        group by courseId 
+        order by count(w.courseId) desc 
+        limit 4`,
         QueryTypes.SELECT
     );
     return result[0];
@@ -231,4 +238,18 @@ exports.GetListEnrolledCourses = async function(userId, page, limit){
     });
     const totalPage = Math.ceil(total.count / limit);
     return {result: result[0], totalPage: totalPage};
+}
+
+exports.GetListMostEnrollInWeek = async function(){
+    const result = await db.sequelize.query(
+        `select c.* 
+        from enroll_lists as e
+        inner join courses as c 
+        on e.courseId = c.id 
+        where e.courseId = c.id and e.createdAt > ${Date.now() - 7 * 24 * 3600 * 1000}
+        group by e.courseId
+        order by count(e.id) desc
+        limit ${LIMIT}`
+    );
+    return result;
 }
