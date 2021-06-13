@@ -28,6 +28,8 @@ app.use('/api/documents', require('./routes/documents.route'));
 
 app.use('/api/storage', require('./middlewares/auth.mdw'), require('./routes/storage.route'));
 
+app.use('/api/video', require('./middlewares/auth.mdw'), require('./routes/video.route'));
+
 app.use((err, req, res, next) => {
   console.log(err);
   if (err.statusCode == undefined) {

@@ -1,5 +1,6 @@
 const db = require('../models');
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
+const EnrollList = require('../models/enroll_list')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
 const { Op, QueryTypes } = require('sequelize');
 const category = require('../models/category')(db.sequelize, db.Sequelize.DataTypes);
@@ -208,4 +209,26 @@ exports.checkEnrollCourse = async function (courseId, userId) {
         }
     );
     return result[0];
+}
+
+exports.GetListEnrolledCourses = async function(userId, page, limit){
+    const result = await db.sequelize.query(
+        `select c.* 
+        from enroll_lists as e
+        inner join 
+        courses as c 
+        on e.courseId = c.id 
+        where e.createdBy = ${userId}
+        order by e.createdAt desc
+        limit ${limit}
+        offset ${(page - 1)*limit}`,
+        QueryTypes.SELECT
+    );
+    const total = await EnrollList.findAndCountAll({
+        where:{
+            createdBy: userId
+        }
+    });
+    const totalPage = Math.ceil(total.count / limit);
+    return {result: result[0], totalPage: totalPage};
 }

@@ -667,6 +667,42 @@ courses/
         }
     }
     ```
+* Get List enrolled courses
+    ```
+    GET '/enrolled?page=1&limit=10'
+    ```
+    Query:
+    * `page`: page number
+    * `limit`: number item per page
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": [
+            {
+                "id": 1,
+                "course_name": "Java Basic",
+                ...
+            },
+            {
+                "id": 2,
+                "course_name": "Angular",
+                ...
+            }
+            ...
+        ],
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalPage": 1
+    }
+    ```
 
 * Get all chapters of course:
     ```
@@ -803,8 +839,7 @@ courses/
     }
     ```
 
-
-* Get Enroll course
+* Get Enroll course information
     ```
     GET '/:id/enroll'
     ```
@@ -875,26 +910,26 @@ courses/
     Body:
     ```
     {
-        "watching":2,
-        "done":"[1]",
-        "status":1
+        "watching": 2,
+        "done": "[1]",
+        "status": 1
     }
     ```
     Response:
     ```
+    200 OK:
     {
         "message": null,
         "code": true,
         "data": {
-            "id": 1,
-            "courseId": 1,
+            "id": 17,
             "watching": 2,
             "done": "[1]",
             "status": 1,
+            "courseId": 1,
             "createdBy": 1,
-            "updatedBy": null,
-            "createdAt": "2021-06-08T16:11:44.000Z",
-            "updatedAt": "2021-06-09T14:58:32.689Z"
+            "updatedAt": "2021-06-05T16:13:45.925Z",
+            "createdAt": "2021-06-05T16:13:45.925Z"
         }
     }
     ```
@@ -1291,6 +1326,78 @@ courses/
         }
     }
     ```
+## Video
+* Get videos by chapterId
+    ```
+    GET '/by-chapterId/:chapterId'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": [
+            {
+                "id": 1,
+                "chapterId": 1,
+                "title": "test video",
+                "description": "this is a test video",
+                "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+                ...
+            },
+            {
+                "id": 2,
+                "chapterId": 1,
+                "title": "test video",
+                "description": "this is a test video",
+                "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+                ...
+            }
+        ]
+    }
+    ```
 
-
-* Get 
+* Post video
+    ```
+    POST '/'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Body:
+    ```
+    {
+        "chapterId": 1,
+        "title": "test video",
+        "description": "this is a test video",
+        "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+        "time": 100
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+    "message": null,
+    "code": true,
+    "data": {
+        "id": 3,
+        "chapterId": 1,
+        "title": "test video",
+        "description": "this is a test video",
+        "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+        "time": 100,
+        "createdBy": 1,
+        ...
+    }
+    ```

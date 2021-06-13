@@ -4,6 +4,8 @@ const courseSchema = require('../schemas/course.json');
 const enrollListSchema = require('../schemas/enroll-course.json');
 const getQuerySchema = require('../schemas/getQuery');
 const categoryService = require('../services/category.service');
+const enrollCourseSchema = require('../schemas/enroll-course.json');
+const catService = require('../services/category.service');
 const courseService = require('../services/course.service');
 const feedbackService = require('../services/feedback.service');
 const chapterService = require('../services/chapter.service');
@@ -17,6 +19,9 @@ const {
     getLimitQuery,
     getPageQuery,
 } = require('../utils');
+const AuthMdw = require('../middlewares/auth.mdw');
+const ValidateMdw = require('../middlewares/validate.mdw');
+const ValidateQuery = require('../middlewares/validateGetQuery.mdw');
 
 router.post('/',
     require('../middlewares/auth.mdw'),
@@ -123,6 +128,19 @@ router.get('/most-views', async function (req, res, next) {
     }
 });
 
+router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function(req,res, next){
+    try {
+        let { page, limit } = req.query;
+        page = getPageQuery(page);
+        limit = getLimitQuery(limit);
+        let userId = req.accessTokenPayload.userId;
+        const {result, totalPage} = await courseService.GetListEnrolledCourses(userId, page, limit);
+        res.status(200).json(new PageResponse(null, true, result, page, limit, totalPage));
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/:id', async function (req, res, next) {
     try {
         let { id } = req.params;
@@ -157,6 +175,47 @@ router.get('/:id/rating', async function (req, res, next) {
         })
         res.status(200).json(new Response(null, true, result));
     } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:id/enroll', AuthMdw, async function (req,res, next){
+    try{
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 0) throw new ErrorHandler(400, "Id NaN.");
+        let userId = req.accessTokenPayload.userId;
+        const result = await enrollListsService.GetEnrollCourseInfo(id, userId);
+        res.status(200).json(new Response(null, true, result));
+    }catch(error){
+        next(error);
+    }
+});
+
+router.post('/:id/enroll', AuthMdw, async function (req,res,next){
+    try{
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 0) throw new ErrorHandler(400, "Id NaN.");
+        let userId = req.accessTokenPayload.userId;
+        const result = await enrollListsService.EnrollCourses(id, userId);
+        res.status(200).json(new Response(null, true, result));
+    }catch(error){
+        next(error);
+    }
+});
+
+router.put('/:id/enroll', AuthMdw, ValidateMdw(enrollCourseSchema), async function (req,res,next){
+    try{
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 0) throw new ErrorHandler(400, "Id NaN.");
+        let enroll = req.body;
+        enroll.createdBy = req.accessTokenPayload.userId;
+        enroll.courseId = id;
+        const result = await enrollListsService.UpdateEnrollCourseInfo(enroll);
+        res.status(200).json(new Response(null, true, result));
+    }catch(error){
         next(error);
     }
 });
