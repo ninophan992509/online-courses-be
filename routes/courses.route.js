@@ -5,7 +5,6 @@ const enrollListSchema = require('../schemas/enroll-course.json');
 const getQuerySchema = require('../schemas/getQuery');
 const categoryService = require('../services/category.service');
 const enrollCourseSchema = require('../schemas/enroll-course.json');
-const catService = require('../services/category.service');
 const courseService = require('../services/course.service');
 const feedbackService = require('../services/feedback.service');
 const chapterService = require('../services/chapter.service');
@@ -213,7 +212,7 @@ router.put('/:id/enroll', AuthMdw, ValidateMdw(enrollCourseSchema), async functi
         let enroll = req.body;
         enroll.createdBy = req.accessTokenPayload.userId;
         enroll.courseId = id;
-        const result = await enrollListsService.UpdateEnrollCourseInfo(enroll);
+        const result = await enrollListsService.UpdateEnrollCourses(enroll);
         res.status(200).json(new Response(null, true, result));
     }catch(error){
         next(error);
