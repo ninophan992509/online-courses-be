@@ -1,8 +1,12 @@
 const db = require('../models');
 const Feedbacks = require('../models/feedback')(db.sequelize, db.Sequelize.DataTypes);
+const Users = require('../models/user')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
 const { QueryTypes } = require('sequelize');
 const courseService = require('./course.service');
+
+Feedbacks.belongsTo(Users, { foreignKey: 'createdBy' });
+Users.hasMany(Feedbacks, { foreignKey: 'id' });
 
 /**
  * 
@@ -11,7 +15,12 @@ const courseService = require('./course.service');
  */
 exports.findOne = async function (whereObject) {
     return await Feedbacks.findOne({
-        where: whereObject
+        where: whereObject,
+        include: {
+            model: Users,
+            required: false,
+            attributes: ['fullname']
+        },
     });
 }
 
@@ -24,6 +33,11 @@ exports.findAll = async function (page, limit, courseId) {
         where: whereObj,
         limit,
         offset: (page - 1) * limit,
+        include: {
+            model: Users,
+            required: false,
+            attributes: ['fullname']
+        },
     });
 }
 
