@@ -17,7 +17,7 @@ localhost:3000/api/
 ```
 /auth
 ```
-* Register:
+* Register: lmtoan
     ```
     POST '/register'
     ```
@@ -54,7 +54,7 @@ localhost:3000/api/
     }
     ```
 
-* Signin:
+* Signin: lmtoan
     ```
     POST '/signin'
     ```
@@ -92,7 +92,7 @@ localhost:3000/api/
     }
     ```
 
-* Refresh AccessToken
+* Refresh AccessToken: lmtoan
     ```
     POST '/refresh-token'
     ```
@@ -453,7 +453,7 @@ courses/
     ```
 
 
-* Get list highlight courses:
+* Get list highlight courses: lmtoan
     ```
     GET '/highlights'
     ```
@@ -492,7 +492,7 @@ courses/
     }
     ```
 
-* Get list most views courses:
+* Get list most views courses: lmtoan
     ```
     GET '/most-views'
     ```
@@ -533,7 +533,7 @@ courses/
     }
     ```
 
-* Get list most enrolled courses in week:
+* Get list most enrolled courses in week: lmtoan
     ```
     GET '/most-enrolled'
     ```
@@ -698,7 +698,7 @@ courses/
     }
     ```
 
-* Get List enrolled courses
+* Get List enrolled courses: lmtoan
     ```
     GET '/enrolled?page=1&limit=10'
     ```
@@ -870,7 +870,7 @@ courses/
     }
     ```
 
-* Get Enroll course information
+* Get Enroll course information: lmtoan
     ```
     GET '/:id/enroll'
     ```
@@ -899,7 +899,7 @@ courses/
     }
     ```
 
-* Enroll course
+* Enroll course: lmtoan
     ```
     POST '/:id/enroll'
     ```
@@ -928,7 +928,7 @@ courses/
     }
     ```
 
-* Update enroll course
+* Update enroll course: lmtoan
     ```
     PUT '/:id/enroll'
     ```
@@ -1339,7 +1339,7 @@ courses/
 ```
 /storage
 ```
-* Get Upload URL
+* Get Upload URL: lmtoan
     ```
     GET '/upload-url'
     ```
@@ -1364,7 +1364,7 @@ courses/
 ```
 /video
 ```
-* Get videos by chapterId
+* Get videos by chapterId: lmtoan
     ```
     GET '/by-chapterId/:chapterId'
     ```
@@ -1401,7 +1401,7 @@ courses/
     }
     ```
 
-* Post video
+* Post video: lmtoan
     ```
     POST '/'
     ```
