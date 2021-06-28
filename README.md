@@ -799,7 +799,7 @@ courses/
                             "updatedAt": "2021-06-09T15:49:21.000Z"
                         }
                     ],
-                    "videos": []
+                    "lessons": []
                 },
                 ...
             ]
@@ -1438,3 +1438,69 @@ courses/
         ...
     }
     ```
+
+## Lesson
+```
+/lesson
+```
+* Get lesson detail by Id
+    ```
+    GET '/:id'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        {
+            "message": null,
+            "code": true,
+            "data": {
+                "id": 1,
+                "chapterId": 1,
+                "name": "Lesson 1",
+                "number_order": 1,
+                "content": "This is a lesson",
+                "createdBy": 1,
+                "updatedBy": 1,
+                "createdAt": null,
+                "updatedAt": null,
+                "videos": [
+                    {
+                        "id": 1,
+                        "lessonId": 1,
+                        "title": "test video",
+                        "description": "this is a test video",
+                        "link": "https://storage.googleapis.com/online-course-316014.appspot.com/267b38ca-8372-4cff-84ec-a04bde067d6a",
+                        "time": 0,
+                        "status": 0,
+                        "createdBy": 1,
+                        "updatedBy": null,
+                        "createdAt": null,
+                        "updatedAt": null
+                    },
+                    ...
+                ],
+                "documents": [
+                    {
+                        "id": 5,
+                        "lessonId": 1,
+                        "title": "Vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae.",
+                        "description": null,
+                        "status": 1,
+                        "link": null,
+                        "createdBy": 4,
+                        "updatedBy": null,
+                        "createdAt": "2021-06-10T14:22:20.000Z",
+                        "updatedAt": "2021-06-10T14:22:20.000Z"
+                    },
+                    ...
+                ]
+            }
+        }
+    }

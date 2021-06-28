@@ -1,5 +1,6 @@
 const db = require('../models');
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
+const Chapters = require('../models/chapter')(db.sequelize, db.Sequelize.DataTypes);
 const EnrollList = require('../models/enroll_list')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
 const { Op, QueryTypes } = require('sequelize');
@@ -7,6 +8,8 @@ const category = require('../models/category')(db.sequelize, db.Sequelize.DataTy
 const storage = require('./storage.service');
 const LIMIT = 10;
 const OFFSET = 0;
+const models = require('../models');
+Courses.associate(models);
 
 /**
  * 
@@ -27,6 +30,20 @@ exports.findOneNotDoneOrActive = async function (whereObject) {
                 [Op.or]: [STATUS.active, STATUS.notDone]
             }
         }
+    });
+}
+
+exports.findOneWithListChapters = async function (whereObject) {
+    return await Courses.findOne({
+        where: {
+            ...whereObject
+        },
+        include:[
+            {
+                model: Chapters,
+                required: false
+            }
+        ]
     });
 }
 

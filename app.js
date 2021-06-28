@@ -30,6 +30,8 @@ app.use('/api/storage', require('./middlewares/auth.mdw'), require('./routes/sto
 
 app.use('/api/video', require('./middlewares/auth.mdw'), require('./routes/video.route'));
 
+app.use('/api/lesson', require('./routes/lesson.route'));
+
 app.use((err, req, res, next) => {
   console.log(err);
   if (err.statusCode == undefined) {

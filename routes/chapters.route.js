@@ -145,12 +145,8 @@ router.delete('/:id',
                 throw new ErrorHandler(404, "Chapter is not existed.");
             }
 
-            if (dbEntity.videos.length > 0) {
-                throw new ErrorHandler(404, "Remove ralated videos first.");
-            }
-
-            if (dbEntity.documents.length > 0) {
-                throw new ErrorHandler(404, "Remove ralated documents first.");
+            if (dbEntity.lessons.length > 0) {
+                throw new ErrorHandler(404, "Remove ralated lessons first.");
             }
 
             if (payload.type !== USER_TYPE.admin &&

@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const video = sequelize.define(
     "video",
     {
-      chapterId: DataTypes.INTEGER,
+      lessonId: DataTypes.INTEGER,
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
       link: DataTypes.STRING,
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   video.associate = function (models) {
     // associations can be defined here
     video.belongsTo(models.user);
-    video.belongsTo(models.chapter);
+    video.belongsTo(models.lesson);
   };
   return video;
 };

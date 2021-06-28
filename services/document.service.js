@@ -14,15 +14,9 @@ exports.findOne = async function (whereObject) {
     });
 }
 
-exports.findAll = async function (page, limit, chapterId) {
-    const whereObj = { status: STATUS.active }
-    if (chapterId) {
-        whereObj.chapterId = chapterId;
-    }
-    return await Documents.findAndCountAll({
-        where: whereObj,
-        limit,
-        offset: (page - 1) * limit,
+exports.findAll = async function (whereObject) {
+    return await Documents.findAll({
+        where: whereObject
     });
 }
 

@@ -22,9 +22,10 @@ module.exports = (sequelize, DataTypes) => {
   );
   course.associate = function (models) {
     // associations can be defined here
-    course.belongsTo(models.user);
-    course.belongsTo(models.category);
+    //course.belongsTo(models.user);
+    course.belongsTo(models.category, {foreignKey: 'createdBy'});
     course.hasMany(models.enroll_list, { foreignKey: 'courseId' });
+    course.hasMany(models.chapter, {foreignKey: 'courseId'});
   };
   return course;
 };

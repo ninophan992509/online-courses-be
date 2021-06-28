@@ -2,15 +2,17 @@ const db = require('../models');
 const Chapters = require('../models/chapter')(db.sequelize, db.Sequelize.DataTypes);
 const Documents = require('../models/document')(db.sequelize, db.Sequelize.DataTypes);
 const Videos = require('../models/video')(db.sequelize, db.Sequelize.DataTypes);
+const Lessons = require('../models/lesson')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
 const { QueryTypes } = require('sequelize');
 const courseService = require('./course.service');
 
-Chapters.hasMany(Documents, { foreignKey: 'chapterId' });
-Chapters.hasMany(Videos, { foreignKey: 'chapterId' });
-Documents.belongsTo(Chapters, { foreignKey: 'chapterId' });
-Videos.belongsTo(Chapters, { foreignKey: 'chapterId' });
-
+// Chapters.hasMany(Documents, { foreignKey: 'chapterId' });
+// Chapters.hasMany(Videos, { foreignKey: 'chapterId' });
+// Documents.belongsTo(Chapters, { foreignKey: 'chapterId' });
+// Videos.belongsTo(Chapters, { foreignKey: 'chapterId' });
+Chapters.hasMany(Lessons, {foreignKey: 'chapterId'});
+Lessons.belongsTo(Chapters, {foreignKey: 'chapterId'});
 /**
  * 
  * @param whereObject ex: { categoryId: 1, status: STATUS.active }
@@ -34,17 +36,7 @@ exports.findAll = async function (page, limit, courseId) {
         order: [['createdAt', 'ASC']],
         include: [
             {
-                model: Documents,
-                where: {
-                    status: STATUS.active
-                },
-                required: false
-            },
-            {
-                model: Videos,
-                where: {
-                    status: STATUS.active
-                },
+                model: Lessons,
                 required: false
             }
         ]
@@ -64,17 +56,7 @@ exports.findRelated = async function (whereObj) {
         where: whereObj,
         include: [
             {
-                model: Documents,
-                where: {
-                    status: STATUS.active
-                },
-                required: false
-            },
-            {
-                model: Videos,
-                where: {
-                    status: STATUS.active
-                },
+                model: Lessons,
                 required: false
             }
         ]

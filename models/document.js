@@ -3,10 +3,11 @@ module.exports = (sequelize, DataTypes) => {
   const document = sequelize.define(
     "document",
     {
-      chapterId: DataTypes.INTEGER,
+      lessonId: DataTypes.INTEGER,
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
       status: DataTypes.INTEGER,
+      link: DataTypes.STRING,
       createdBy: DataTypes.INTEGER,
       updatedBy: DataTypes.INTEGER,
     },
@@ -15,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   document.associate = function (models) {
     // associations can be defined here
     document.belongsTo(models.user);
-    document.belongsTo(models.chapter);
+    document.belongsTo(models.lesson);
   };
   return document;
 };
