@@ -65,6 +65,15 @@ router.get('/', validateGetQuery(getQuerySchema), async function (req, res, next
     }
 });
 
+router.get('/most-enroll-this-week', async function (req, res, next) {
+    try {
+        const result = await categoryService.findMostEnrollInWeek();
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/:id', async function (req, res, next) {
     try {
         const id = parseInt(req.params.id);
@@ -78,14 +87,7 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
-router.get('/most-enroll-this-week', async function (req, res, next) {
-    try {
-        const result = await categoryService.findMostEnrollInWeek();
-        res.status(200).json(new Response(null, true, result));
-    } catch (error) {
-        next(error);
-    }
-});
+
 
 
 router.put('/',

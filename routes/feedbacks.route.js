@@ -54,7 +54,8 @@ router.post('/',
             await courseService.updateRating(checkCourse, entity, 1);
 
             const result = await feedbackService.create(entity);
-            res.status(201).json(new Response(null, true, result));
+            const createdEntity = await feedbackService.findOne({ id: result.id });
+            res.status(201).json(new Response(null, true, createdEntity));
         } catch (error) {
             next(error);
         }

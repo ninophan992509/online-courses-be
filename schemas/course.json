@@ -3,6 +3,7 @@
         "course_name",
         "picture",
         "tuition_fee",
+        "short_description",
         "description",
         "categoryId"
     ],
@@ -24,6 +25,9 @@
         "sale": {
             "type": "integer",
             "minimum": 0
+        },
+        "short_description": {
+            "type": "string"
         },
         "description": {
             "type": "string"
