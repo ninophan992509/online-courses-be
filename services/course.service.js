@@ -270,3 +270,13 @@ exports.GetListMostEnrollInWeek = async function(){
     );
     return result;
 }
+
+exports.SearchCoursePaged = async function(page, limit, query){
+    const result = await db.sequelize.query(
+        `select * from courses
+        where match (course_name, description, short_description) against ('${query}' in natural language mode)
+        limit ${limit}
+        offset ${(page - 1) * limit}`
+    );
+    return result[0];
+}

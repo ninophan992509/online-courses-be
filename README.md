@@ -563,6 +563,51 @@ courses/
     }
     ```
     
+* Search course by course_name, descriprion: lmtoan
+    ```
+    GET '/search'
+    ```
+    Query:
+
+    * `page` (number): page number (default: 1)
+    * `limit` (number): number of course per page (default: 10)
+    * `query` (string)
+    
+    Example:
+    http://localhost:3000/api/courses/search?query=frame&page=1&limit=3
+    ```
+    Response:
+    {
+        "message": null,
+        "code": true,
+        "data": [
+            {
+                "id": 6,
+                "course_name": "Java Framework 7",
+                "number_enrolled": 2,
+                "rating": 5,
+                "number_rating": 1,
+                "picture": "string",
+                "tuition_fee": 2300,
+                "sale": 0,
+                "description": "test edit 2",
+                "status": 1,
+                "createdAt": "2021-06-08T03:43:56.000Z",
+                "updatedAt": "2021-06-27T16:49:09.000Z",
+                "createdBy": 5,
+                "updatedBy": 5,
+                "teacherId": 5,
+                "categoryId": 10,
+                "total_rating": 5,
+                "short_description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            }
+        ],
+        "pageNumber": 1,
+        "pageSize": 1
+    }
+    ```
+
+
 * Create new course (admin, teacher):
     ```
     POST `/`

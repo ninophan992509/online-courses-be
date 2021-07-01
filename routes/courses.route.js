@@ -149,6 +149,21 @@ router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function(r
     }
 });
 
+router.get('/search',
+    require('../middlewares/validateGetQuery.mdw')(getQuerySchema),
+    async function (req,res,next){
+        try {
+            let { page, limit, query } = req.query;
+            page = getPageQuery(page);
+            limit = getLimitQuery(limit);
+
+            const result = await courseService.SearchCoursePaged(page, limit,  query);
+            res.status(200).json(new PageResponse(null, true, result, page, limit));
+        } catch (error) {
+            next(error);
+        }
+});
+
 router.get('/:id', async function (req, res, next) {
     try {
         let { id } = req.params;
