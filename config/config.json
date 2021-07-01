@@ -4,6 +4,7 @@
     "database": "onlinecw_online-courses",
     "password": "lmtoan123",
     "host": "103.97.125.247",
+    "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
       "charset": "utf8",
