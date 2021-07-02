@@ -2,6 +2,7 @@ const db = require('../models');
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
 const Chapters = require('../models/chapter')(db.sequelize, db.Sequelize.DataTypes);
 const EnrollList = require('../models/enroll_list')(db.sequelize, db.Sequelize.DataTypes);
+const Users = require('../models/user')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
 const { Op, QueryTypes } = require('sequelize');
 const category = require('../models/category')(db.sequelize, db.Sequelize.DataTypes);
@@ -24,13 +25,30 @@ exports.findOne = async function (whereObject) {
 
 
 exports.findOneNotDoneOrActive = async function (whereObject) {
-    return await Courses.findOne({
+    let result = await Courses.findOne({
         where: {
             ...whereObject, status: {
                 [Op.or]: [STATUS.active, STATUS.notDone]
             }
-        }
+        },
+        include:[
+            {
+                model:category,
+                required: false,
+                attributes: ['category_name']
+            },
+            {
+                model:Users,
+                required: false,
+                attributes: ['fullname']
+            }
+        ]
     });
+    result.dataValues.category_name = result.category.category_name
+    delete result.dataValues.category;
+    result.dataValues.teacher_name = result.user.fullname;
+    delete result.dataValues.user;
+    return result;
 }
 
 exports.findOneWithListChapters = async function (whereObject) {
@@ -48,7 +66,7 @@ exports.findOneWithListChapters = async function (whereObject) {
 }
 
 exports.findNewest = async function () {
-    return await Courses.findAndCountAll({
+    let result = await Courses.findAll({
         where: {
             status: { [Op.or]: [STATUS.active, STATUS.notDone] }
         },
@@ -57,12 +75,30 @@ exports.findNewest = async function () {
         ],
         limit: LIMIT,
         offset: OFFSET,
+        include:[
+            {
+                model:category,
+                required: false,
+                attributes: ['category_name']
+            },
+            {
+                model:Users,
+                required: false,
+                attributes: ['fullname']
+            }
+        ]
     });
+    await result.forEach(r => {
+        r.dataValues.category_name = r.category.category_name
+        delete r.dataValues.category;
+        r.dataValues.teacher_name = r.user.fullname;
+        delete r.dataValues.user;
+    });
+    return result;
 }
 
-
 exports.findMostEnrolled = async function () {
-    return await Courses.findAndCountAll({
+    let result = await Courses.findAll({
         where: {
             status: { [Op.or]: [STATUS.active, STATUS.notDone] }
         },
@@ -71,13 +107,30 @@ exports.findMostEnrolled = async function () {
         ],
         limit: LIMIT,
         offset: OFFSET,
+        include:[
+            {
+                model:category,
+                required: false,
+                attributes: ['category_name'],
+            },
+            {
+                model: Users,
+                required: false,
+                attributes: ['fullname'],
+            }
+        ]
     });
+    await result.forEach(r => {
+        r.dataValues.category_name = r.category.category_name
+        delete r.dataValues.category;
+        r.dataValues.teacher_name = r.user.fullname;
+        delete r.dataValues.user;
+    });
+    return result;
 }
-
 
 exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
     const whereObj = { status: { [Op.or]: [STATUS.active, STATUS.notDone] } }
-    console.log(">> ~ file: course.service.js ~ line 63 ~ lstCategoryId", lstCategoryId);
     if (lstCategoryId.length > 0) {
         whereObj.categoryId = { [Op.or]: lstCategoryId };
     }
@@ -88,6 +141,19 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
         where: whereObj,
         limit,
         offset: (page - 1) * limit,
+        include:[
+            {
+                model:category,
+                required: false,
+                attributes: ['category_name'],
+                as: 'category'
+            },
+            {
+                model: Users,
+                required: false,
+                attributes: ['fullname'],
+            }
+        ]
     });
     const extraData = await Promise.all([
         exports.findNewest(),
@@ -99,8 +165,9 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
         isMostEnrolled: new Set(),
         isHighlight: new Set(),
     }
-    extraData[0].rows.forEach(x => { check.isNew.add(x.id); });
-    extraData[1].rows.forEach(x => { check.isMostEnrolled.add(x.id); });
+    
+    extraData[0].forEach(x => { check.isNew.add(x.id); });
+    extraData[1].forEach(x => { check.isMostEnrolled.add(x.id); });
     extraData[2].forEach(x => { check.isHighlight.add(x.id); });
     for (let i = 0; i < result.rows.length; i++) {
         let x = result.rows[i].dataValues;
@@ -120,6 +187,14 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
             x.isHighlight = false;
         }
     }
+
+    await result.rows.forEach(r => {
+        r.dataValues.category_name = r.category.category_name
+        delete r.dataValues.category;
+        r.dataValues.teacher_name = r.user.fullname;
+        delete r.dataValues.user;
+    });
+
     return result;
 }
 
@@ -198,29 +273,57 @@ exports.updateEnrolled = async function (course) {
 }
 
 exports.getListHighlightCourses = async function () {
-    return await Courses.findAll({
+    let result = await Courses.findAll({
         where: {
             createdAt: {
-                [Op.gt]: Date.now() - 7 * 24 * 3600 * 1000
+                [Op.gt]: Date.now() - 30 * 24 * 3600 * 1000
             }
         },
         limit: LIMIT,
         order: [['rating', 'DESC']],
+        include:[
+            {
+                model:category,
+                required: false,
+                attributes: ['id','category_name']
+            },
+            {
+                model:Users,
+                required: false,
+                attributes: ['id', 'fullname']
+            }
+        ]
     });
+
+    await result.forEach(r => {
+        r.dataValues.category_name = r.category.category_name
+        delete r.dataValues.category;
+        r.dataValues.teacher_name = r.user.fullname;
+        delete r.dataValues.user;
+    });
+    return result;
 }
 
 exports.getListMostViewsCourses = async function () {
     const result = await db.sequelize.query(
-        `select c.* 
+        `select c.* , category.category_name as category_name,teacher.fullname as teacher_name
         from watch_lists as w 
         inner join 
         courses as c 
-        on w.courseId = c.id 
+        on w.courseId = c.id
+        inner join
+		categories as category
+        on c.categoryId = category.id
+        inner join
+        users as teacher
+        on c.teacherId = teacher.id
         group by courseId 
         order by count(w.courseId) desc 
         limit 4`,
         QueryTypes.SELECT
     );
+
+
     return result[0];
 }
 
@@ -237,32 +340,38 @@ exports.checkEnrollCourse = async function (courseId, userId) {
 
 exports.GetListEnrolledCourses = async function(userId, page, limit){
     const result = await db.sequelize.query(
-        `select c.* 
+        `select c.*, category.category_name as category_name,teacher.fullname as teacher_name
         from enroll_lists as e
         inner join 
         courses as c 
-        on e.courseId = c.id 
+        on e.courseId = c.id
+        inner join
+		categories as category
+        on c.categoryId = category.id
+        inner join
+        users as teacher
+        on c.teacherId = teacher.id
         where e.createdBy = ${userId}
         order by e.createdAt desc
         limit ${limit}
         offset ${(page - 1)*limit}`,
         QueryTypes.SELECT
     );
-    const total = await EnrollList.findAndCountAll({
-        where:{
-            createdBy: userId
-        }
-    });
-    const totalPage = Math.ceil(total.count / limit);
-    return {result: result[0], totalPage: totalPage};
+    return result;
 }
 
 exports.GetListMostEnrollInWeek = async function(){
     const result = await db.sequelize.query(
-        `select c.* 
+        `select c.*, category.category_name as category_name,teacher.fullname as teacher_name
         from enroll_lists as e
         inner join courses as c 
         on e.courseId = c.id 
+        inner join
+		categories as category
+        on c.categoryId = category.id
+        inner join
+        users as teacher
+        on c.teacherId = teacher.id
         where e.courseId = c.id and e.createdAt > ${Date.now() - 7 * 24 * 3600 * 1000}
         group by e.courseId
         order by count(e.id) desc
