@@ -3,7 +3,7 @@
     "username": "admin",
     "database": "online-course",
     "password": "nhunguyenaA",
-    "host": "database-2.ciqwjmjt5xtn.us-east-2.rds.amazonaws.com",
+    "host": "online-course-singapore-db.c2yslmnu5obk.ap-southeast-1.rds.amazonaws.com",
     "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
