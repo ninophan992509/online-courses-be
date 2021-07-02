@@ -382,7 +382,14 @@ exports.GetListMostEnrollInWeek = async function(){
 
 exports.SearchCoursePaged = async function(page, limit, query){
     const result = await db.sequelize.query(
-        `select * from courses
+        `select c.*,category.category_name as category_name,teacher.fullname as teacher_name
+        from courses as c
+        inner join
+		categories as category
+        on c.categoryId = category.id
+        inner join
+        users as teacher
+        on c.teacherId = teacher.id
         where match (course_name, description, short_description) against ('${query}' in natural language mode)
         limit ${limit}
         offset ${(page - 1) * limit}`
