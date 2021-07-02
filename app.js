@@ -42,7 +42,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
   console.log(`Sakila api is running at http://localhost:${PORT}`);
 })

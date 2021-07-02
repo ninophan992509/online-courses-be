@@ -10,7 +10,7 @@ module.exports = {
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
     return queryInterface.sequelize
-      .query('ALTER DATABASE `onlinecw_online-courses` CHARACTER SET utf8 COLLATE utf8_general_ci');
+      .query('ALTER DATABASE `online-course` CHARACTER SET utf8 COLLATE utf8_general_ci');
   },
 
   down: (queryInterface, Sequelize) => {

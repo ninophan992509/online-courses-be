@@ -129,7 +129,7 @@ router.get('/most-views', async function (req, res, next) {
 
 router.get('/most-enrolled', async function(req, res, next){
     try {
-        const result = await courseService.GetListMostEnrollInWeek();
+        const result = await courseService.findMostEnrolled();
         res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
@@ -142,11 +142,26 @@ router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function(r
         page = getPageQuery(page);
         limit = getLimitQuery(limit);
         let userId = req.accessTokenPayload.userId;
-        const {result, totalPage} = await courseService.GetListEnrolledCourses(userId, page, limit);
-        res.status(200).json(new PageResponse(null, true, result, page, limit, totalPage));
+        const result = await courseService.GetListEnrolledCourses(userId, page, limit);
+        res.status(200).json(new PageResponse(null, true, result, page, limit));
     } catch (error) {
         next(error);
     }
+});
+
+router.get('/search',
+    require('../middlewares/validateGetQuery.mdw')(getQuerySchema),
+    async function (req,res,next){
+        try {
+            let { page, limit, query } = req.query;
+            page = getPageQuery(page);
+            limit = getLimitQuery(limit);
+
+            const result = await courseService.SearchCoursePaged(page, limit,  query);
+            res.status(200).json(new PageResponse(null, true, result, page, limit));
+        } catch (error) {
+            next(error);
+        }
 });
 
 router.get('/:id', async function (req, res, next) {
