@@ -44,7 +44,7 @@ router.post('/',
             if (checkCategory === null) {
                 throw new ErrorHandler(404, "Category is not existed.");
             }
-            if (checkCategory.parentId !== null) {
+            if (!checkCategory.parentId) {
                 throw new ErrorHandler(400, "Add only level 2 category.");
             }
             const result = await courseService.create(entity);
@@ -127,7 +127,7 @@ router.get('/most-views', async function (req, res, next) {
     }
 });
 
-router.get('/most-enrolled', async function(req, res, next){
+router.get('/most-enrolled', async function (req, res, next) {
     try {
         const result = await courseService.findMostEnrolled();
         res.status(200).json(new Response(null, true, result));
@@ -136,7 +136,7 @@ router.get('/most-enrolled', async function(req, res, next){
     }
 });
 
-router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function(req,res, next){
+router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function (req, res, next) {
     try {
         let { page, limit } = req.query;
         page = getPageQuery(page);
@@ -151,18 +151,18 @@ router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function(r
 
 router.get('/search',
     require('../middlewares/validateGetQuery.mdw')(getQuerySchema),
-    async function (req,res,next){
+    async function (req, res, next) {
         try {
             let { page, limit, query } = req.query;
             page = getPageQuery(page);
             limit = getLimitQuery(limit);
 
-            const result = await courseService.SearchCoursePaged(page, limit,  query);
+            const result = await courseService.SearchCoursePaged(page, limit, query);
             res.status(200).json(new PageResponse(null, true, result, page, limit));
         } catch (error) {
             next(error);
         }
-});
+    });
 
 router.get('/:id', async function (req, res, next) {
     try {
@@ -202,34 +202,34 @@ router.get('/:id/rating', async function (req, res, next) {
     }
 });
 
-router.get('/:id/enroll', AuthMdw, async function (req,res, next){
-    try{
+router.get('/:id/enroll', AuthMdw, async function (req, res, next) {
+    try {
         let { id } = req.params;
         id = parseInt(id);
         if (isNaN(id) || id < 0) throw new ErrorHandler(400, "Id NaN.");
         let userId = req.accessTokenPayload.userId;
         const result = await enrollListsService.GetEnrollCourseInfo(id, userId);
         res.status(200).json(new Response(null, true, result));
-    }catch(error){
+    } catch (error) {
         next(error);
     }
 });
 
-router.post('/:id/enroll', AuthMdw, async function (req,res,next){
-    try{
+router.post('/:id/enroll', AuthMdw, async function (req, res, next) {
+    try {
         let { id } = req.params;
         id = parseInt(id);
         if (isNaN(id) || id < 0) throw new ErrorHandler(400, "Id NaN.");
         let userId = req.accessTokenPayload.userId;
         const result = await enrollListsService.EnrollCourses(id, userId);
         res.status(200).json(new Response(null, true, result));
-    }catch(error){
+    } catch (error) {
         next(error);
     }
 });
 
-router.put('/:id/enroll', AuthMdw, ValidateMdw(enrollCourseSchema), async function (req,res,next){
-    try{
+router.put('/:id/enroll', AuthMdw, ValidateMdw(enrollCourseSchema), async function (req, res, next) {
+    try {
         let { id } = req.params;
         id = parseInt(id);
         if (isNaN(id) || id < 0) throw new ErrorHandler(400, "Id NaN.");
@@ -238,7 +238,7 @@ router.put('/:id/enroll', AuthMdw, ValidateMdw(enrollCourseSchema), async functi
         enroll.courseId = id;
         const result = await enrollListsService.UpdateEnrollCourses(enroll);
         res.status(200).json(new Response(null, true, result));
-    }catch(error){
+    } catch (error) {
         next(error);
     }
 });
