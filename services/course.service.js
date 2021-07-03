@@ -31,14 +31,14 @@ exports.findOneNotDoneOrActive = async function (whereObject) {
                 [Op.or]: [STATUS.active, STATUS.notDone]
             }
         },
-        include:[
+        include: [
             {
-                model:category,
+                model: category,
                 required: false,
                 attributes: ['category_name']
             },
             {
-                model:Users,
+                model: Users,
                 required: false,
                 attributes: ['fullname']
             }
@@ -56,7 +56,7 @@ exports.findOneWithListChapters = async function (whereObject) {
         where: {
             ...whereObject
         },
-        include:[
+        include: [
             {
                 model: Chapters,
                 required: false
@@ -75,14 +75,14 @@ exports.findNewest = async function () {
         ],
         limit: LIMIT,
         offset: OFFSET,
-        include:[
+        include: [
             {
-                model:category,
+                model: category,
                 required: false,
                 attributes: ['category_name']
             },
             {
-                model:Users,
+                model: Users,
                 required: false,
                 attributes: ['fullname']
             }
@@ -107,9 +107,9 @@ exports.findMostEnrolled = async function () {
         ],
         limit: LIMIT,
         offset: OFFSET,
-        include:[
+        include: [
             {
-                model:category,
+                model: category,
                 required: false,
                 attributes: ['category_name'],
             },
@@ -141,9 +141,9 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
         where: whereObj,
         limit,
         offset: (page - 1) * limit,
-        include:[
+        include: [
             {
-                model:category,
+                model: category,
                 required: false,
                 attributes: ['category_name'],
                 as: 'category'
@@ -165,7 +165,7 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
         isMostEnrolled: new Set(),
         isHighlight: new Set(),
     }
-    
+
     extraData[0].forEach(x => { check.isNew.add(x.id); });
     extraData[1].forEach(x => { check.isMostEnrolled.add(x.id); });
     extraData[2].forEach(x => { check.isHighlight.add(x.id); });
@@ -281,14 +281,14 @@ exports.getListHighlightCourses = async function () {
         },
         limit: LIMIT,
         order: [['rating', 'DESC']],
-        include:[
+        include: [
             {
-                model:category,
+                model: category,
                 required: false,
-                attributes: ['id','category_name']
+                attributes: ['id', 'category_name']
             },
             {
-                model:Users,
+                model: Users,
                 required: false,
                 attributes: ['id', 'fullname']
             }
@@ -338,7 +338,7 @@ exports.checkEnrollCourse = async function (courseId, userId) {
     return result[0];
 }
 
-exports.GetListEnrolledCourses = async function(userId, page, limit){
+exports.GetListEnrolledCourses = async function (userId, page, limit) {
     const result = await db.sequelize.query(
         `select c.*, category.category_name as category_name,teacher.fullname as teacher_name
         from enroll_lists as e
@@ -354,13 +354,13 @@ exports.GetListEnrolledCourses = async function(userId, page, limit){
         where e.createdBy = ${userId}
         order by e.createdAt desc
         limit ${limit}
-        offset ${(page - 1)*limit}`,
+        offset ${(page - 1) * limit}`,
         QueryTypes.SELECT
     );
     return result;
 }
 
-exports.GetListMostEnrollInWeek = async function(){
+exports.GetListMostEnrollInWeek = async function () {
     const result = await db.sequelize.query(
         `select c.*, category.category_name as category_name,teacher.fullname as teacher_name
         from enroll_lists as e
@@ -380,7 +380,7 @@ exports.GetListMostEnrollInWeek = async function(){
     return result;
 }
 
-exports.SearchCoursePaged = async function(page, limit, query){
+exports.SearchCoursePaged = async function (page, limit, query) {
     const result = await db.sequelize.query(
         `select c.*,category.category_name as category_name,teacher.fullname as teacher_name
         from courses as c
