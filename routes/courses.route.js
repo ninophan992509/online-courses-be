@@ -59,7 +59,7 @@ router.get('/',
     require('../middlewares/validateGetQuery.mdw')(getQuerySchema),
     async function (req, res, next) {
         try {
-            let { page, limit, categoryId, teacherId } = req.query;
+            let { page, limit, categoryId, teacherId, sort } = req.query;
             page = getPageQuery(page);
             limit = getLimitQuery(limit);
 
@@ -78,7 +78,7 @@ router.get('/',
                     lstCategoryId.push(categoryId);
                 } else {
                     if (category.categories.length === 0) {
-                        throw new ErrorHandler(400, "Level 1 category has no child category.");
+                        lstCategoryId.push(category.id);
                     }
                     category.categories.forEach(item => {
                         lstCategoryId.push(item.id);
@@ -92,7 +92,7 @@ router.get('/',
                 }
             }
 
-            const result = await courseService.findAll(page, limit, lstCategoryId, teacherId);
+            const result = await courseService.findAll(page, limit, lstCategoryId, teacherId, sort);
             res.status(200).json(new PageResponse(null, true, result, page, limit));
         } catch (error) {
             next(error);

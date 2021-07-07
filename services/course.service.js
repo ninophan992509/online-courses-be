@@ -129,7 +129,7 @@ exports.findMostEnrolled = async function () {
     return result;
 }
 
-exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
+exports.findAll = async function (page, limit, lstCategoryId, teacherId, sort) {
     const whereObj = { status: { [Op.or]: [STATUS.active, STATUS.notDone] } }
     if (lstCategoryId.length > 0) {
         whereObj.categoryId = { [Op.or]: lstCategoryId };
@@ -137,6 +137,15 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
     if (teacherId) {
         whereObj.teacherId = teacherId;
     }
+    let orderObj = [];
+    if (sort != undefined){
+        if (sort == "rating"){
+            orderObj = [['rating', 'DESC']];
+        }else{
+            orderObj = [['tuition_fee']];
+        }
+    }
+    
     const result = await Courses.findAndCountAll({
         where: whereObj,
         limit,
@@ -153,7 +162,8 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId) {
                 required: false,
                 attributes: ['fullname'],
             }
-        ]
+        ],
+        order: orderObj
     });
     const extraData = await Promise.all([
         exports.findNewest(),
