@@ -397,6 +397,7 @@ courses/
     * `limit` (number): number of course per page (default: 10)
     * `categoryId` (number)
     * `teacherId` (number)
+    * `sort` (string) [`rating` or `cost`]
 
     Status:
     * 1: teacher uploaded all document and video
