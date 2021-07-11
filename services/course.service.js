@@ -349,6 +349,11 @@ exports.checkEnrollCourse = async function (courseId, userId) {
 }
 
 exports.GetListEnrolledCourses = async function (userId, page, limit) {
+    const count = await db.sequelize.query(`
+    select count(*) as count
+    from enroll_lists where createdBy = ${userId}`,
+    QueryTypes.SELECT);
+
     const result = await db.sequelize.query(
         `select c.*, category.category_name as category_name,teacher.fullname as teacher_name
         from enroll_lists as e
@@ -367,7 +372,7 @@ exports.GetListEnrolledCourses = async function (userId, page, limit) {
         offset ${(page - 1) * limit}`,
         QueryTypes.SELECT
     );
-    return result;
+    return {count: count[0][0].count, rows: result[0]};
 }
 
 exports.GetListMostEnrollInWeek = async function () {

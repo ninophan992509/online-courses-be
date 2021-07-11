@@ -762,7 +762,9 @@ courses/
     {
         "message": null,
         "code": true,
-        "data": [
+        "data": {
+            count: 3,
+            rows:[
             {
                 "id": 1,
                 "course_name": "Java Basic",
@@ -774,10 +776,10 @@ courses/
                 ...
             }
             ...
-        ],
+            ]
+        },
         "pageNumber": 1,
-        "pageSize": 10,
-        "totalPage": 1
+        "pageSize": 10
     }
     ```
 
