@@ -391,6 +391,11 @@ exports.GetListMostEnrollInWeek = async function(){
 }
 
 exports.SearchCoursePaged = async function(page, limit, query){
+    const count = await db.sequelize.query(
+        `select count(*) as count
+        from courses
+        where match (course_name, description, short_description) against ('${query}' in natural language mode)`);
+
     const result = await db.sequelize.query(
         `select c.*,category.category_name as category_name,teacher.fullname as teacher_name
         from courses as c
@@ -404,5 +409,5 @@ exports.SearchCoursePaged = async function(page, limit, query){
         limit ${limit}
         offset ${(page - 1) * limit}`
     );
-    return result[0];
+    return {count: count[0][0].count, rows: result[0]}
 }
