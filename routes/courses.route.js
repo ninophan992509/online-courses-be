@@ -192,6 +192,21 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
+router.get('/:id/relate', async function (req, res, next){
+    try {
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
+        }
+
+        const result = await courseService.GetRelativeCourse(id);
+        res.status(200).json(new Response(null, true, result));
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/:id/rating', async function (req, res, next) {
     try {
         let { id } = req.params;

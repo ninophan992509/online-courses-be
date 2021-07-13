@@ -445,3 +445,26 @@ exports.GetSelfWatchList = async function(userId, page, limit)
 
     return {count: count[0][0].count, rows: result[0]};
 }
+
+exports.GetRelativeCourse = async function(courseId)
+{
+    const course = await Courses.findOne({where:{Id: courseId}});
+    const categoryId = course.dataValues.categoryId;
+
+    const result = await db.sequelize.query(
+        `SELECT course.*,category.category_name as category_name,teacher.fullname as teacher_name
+            FROM enroll_lists enroll
+            inner join courses course
+            on enroll.courseId = course.Id
+            inner join
+            categories as category
+            on course.categoryId = category.id
+            inner join
+            users as teacher
+            on course.teacherId = teacher.id
+            where course.categoryId = ${categoryId} and course.Id <> ${courseId}
+            group by course.Id
+            order by count(course.Id)`
+    );
+    return result[0];
+}
