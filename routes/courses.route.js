@@ -149,6 +149,19 @@ router.get('/enrolled', AuthMdw, ValidateQuery(getQuerySchema), async function (
     }
 });
 
+router.get('/watch-list', AuthMdw, async function(req,res, next){
+    try {
+        let { page, limit } = req.query;
+        page = getPageQuery(page);
+        limit = getLimitQuery(limit);
+        let userId = req.accessTokenPayload.userId;
+        const result = await courseService.GetSelfWatchList(userId, page, limit);
+        res.status(200).json(new PageResponse(null, true, result, page, limit));
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/search',
     require('../middlewares/validateGetQuery.mdw')(getQuerySchema),
     async function (req, res, next) {
