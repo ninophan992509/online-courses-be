@@ -468,3 +468,8 @@ exports.GetRelativeCourse = async function(courseId)
     );
     return result[0];
 }
+
+exports.AddCourseToWatchList = async function(courseId, userId){
+    let watchList = {courseId:courseId, status: 1, createdBy: userId, updatedBy: userId};
+    await WatchList.create(watchList);
+}
