@@ -17,5 +17,6 @@ exports.generateV4UploadSignedUrl = async function(fileName){
         .file(fileName)
         .getSignedUrl(options);
 
-    return {signedUrl: url};
+    const fileUrl = `https://storage.googleapis.com/online-course-316014.appspot.com/${fileName}`;
+    return {signedUrl: url, fileUrl: fileUrl};
 }
