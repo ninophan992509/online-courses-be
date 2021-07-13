@@ -2,9 +2,10 @@ const db = require('../models');
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
 const Chapters = require('../models/chapter')(db.sequelize, db.Sequelize.DataTypes);
 const EnrollList = require('../models/enroll_list')(db.sequelize, db.Sequelize.DataTypes);
+const WatchList = require('../models/watch_list')(db.sequelize, db.Sequelize.DataTypes);
 const Users = require('../models/user')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
-const { Op, QueryTypes } = require('sequelize');
+const { Op, QueryTypes, where } = require('sequelize');
 const category = require('../models/category')(db.sequelize, db.Sequelize.DataTypes);
 const storage = require('./storage.service');
 const LIMIT = 10;
@@ -415,4 +416,32 @@ exports.SearchCoursePaged = async function(page, limit, query){
         offset ${(page - 1) * limit}`
     );
     return {count: count[0][0].count, rows: result[0]}
+}
+
+exports.GetSelfWatchList = async function(userId, page, limit)
+{
+    const count = await db.sequelize.query(
+        `select count(*) as count
+            from watch_lists
+            where createdBy = ${userId}`
+    );
+
+    const result = await db.sequelize.query(
+        `SELECT c.*, category.category_name as category_name,teacher.fullname as teacher_name
+        FROM watch_lists w
+        inner join courses c
+        on w.courseId = c.Id
+        inner join
+        categories as category
+        on c.categoryId = category.id
+        inner join
+        users as teacher
+        on c.teacherId = teacher.id
+        where w.createdBy = ${userId}
+        order by w.createdAt desc
+        limit ${limit}
+        offset ${(page-1)*limit}`
+    );
+
+    return {count: count[0][0].count, rows: result[0]};
 }
