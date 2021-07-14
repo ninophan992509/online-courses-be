@@ -11,6 +11,7 @@ const storage = require('./storage.service');
 const LIMIT = 10;
 const OFFSET = 0;
 const models = require('../models');
+const course = require('../models/course');
 Courses.associate(models);
 
 /**
@@ -464,7 +465,8 @@ exports.GetRelativeCourse = async function(courseId)
             on course.teacherId = teacher.id
             where course.categoryId = ${categoryId} and course.Id <> ${courseId}
             group by course.Id
-            order by count(course.Id)`
+            order by count(course.Id)
+            limit 5`
     );
     return result[0];
 }
@@ -472,4 +474,14 @@ exports.GetRelativeCourse = async function(courseId)
 exports.AddCourseToWatchList = async function(courseId, userId){
     let watchList = {courseId:courseId, status: 1, createdBy: userId, updatedBy: userId};
     await WatchList.create(watchList);
+}
+
+exports.RemoveCourseFromWatchList = async function(courseId, userId){
+    let watchlist = await WatchList.findOne({
+        where: {
+            courseId: courseId,
+            createdBy: userId
+        }
+    });
+    await watchlist.destroy();
 }

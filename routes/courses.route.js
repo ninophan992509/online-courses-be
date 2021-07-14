@@ -223,6 +223,22 @@ router.post('/:id/watch-list', AuthMdw, async function(req, res, next){
     }
 });
 
+router.delete('/:id/watch-list', AuthMdw, async function(req, res, next){
+    try {
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
+        }
+        let userId = req.accessTokenPayload.userId;
+
+        await courseService.RemoveCourseFromWatchList(id, userId);
+        res.status(200).json(new Response(null, true, null));
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/:id/rating', async function (req, res, next) {
     try {
         let { id } = req.params;
