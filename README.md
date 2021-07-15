@@ -1552,3 +1552,94 @@ courses/
             }
         }
     }
+
+* Create lesson
+    ```
+    POST ''
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Body:
+    ```
+    {
+        "chapterId": 1,
+        "name": "Lesson 1",
+        "number_order": 1,
+        "content": "this is a lesson"
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 2,
+            "chapterId": 1,
+            "name": "Lesson 2",
+            "number_order": 2,
+            "content": "",
+            "updatedAt": "2021-07-15T08:52:31.800Z",
+            "createdAt": "2021-07-15T08:52:31.800Z"
+        }
+    }
+    ```
+
+* Update lesson
+    ```
+    PUT '/:id'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Body:
+    ```
+    {
+        "chapterId": 1,
+        "name": "Lesson 1",
+        "number_order": 1,
+        "content": "this is a lesson"
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 2,
+            "chapterId": 1,
+            "name": "Lesson 2",
+            "number_order": 2,
+            "content": "",
+            "updatedAt": "2021-07-15T08:52:31.800Z",
+            "createdAt": "2021-07-15T08:52:31.800Z"
+        }
+    }
+    ```
+
+* Delete lesson
+    ```
+    DELETE '/:id'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": null
+    }
+    ```

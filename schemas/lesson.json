@@ -1,0 +1,23 @@
+{
+    "required": [
+        "chapterId",
+        "name",
+        "number_order",
+        "content"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "chapterId": {
+            "type": "number"
+        },
+        "name": {
+            "type": "string"
+        },
+        "number_order": {
+            "type": "number"
+        },
+        "content": {
+            "type": "string"
+        }
+    }
+}
