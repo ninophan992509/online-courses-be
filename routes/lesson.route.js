@@ -24,17 +24,21 @@ router.get('/:id', AuthMdw, async function (req, res, next) {
         next(error);
     }
 });
-//AuthRoleMdw([USER_TYPE.teacher]),
-router.post('', AuthMdw,  ValidateMdw(LessonSchema), async function (req, res, next) {
+
+router.post('', AuthMdw, AuthRoleMdw([USER_TYPE.teacher]), ValidateMdw(LessonSchema), async function (req, res, next) {
     try {
-        var result = await LessonService.create(req.body);
+        let userId = req.accessTokenPayload.userId;
+        var lesson = req.body;
+        lesson.createdBy = userId;
+        lesson.updatedBy = userId;
+        var result = await LessonService.create(lesson);
         res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
     }
 });
 
-router.put('/:id', AuthMdw, ValidateMdw(LessonSchema), async function (req, res, next) {
+router.put('/:id', AuthMdw, AuthRoleMdw([USER_TYPE.teacher]), ValidateMdw(LessonSchema), async function (req, res, next) {
     try {
         let { id } = req.params;
         id = parseInt(id);
@@ -51,7 +55,7 @@ router.put('/:id', AuthMdw, ValidateMdw(LessonSchema), async function (req, res,
     }
 })
 
-router.delete('/:id', AuthMdw,  async function (req, res, next) {
+router.delete('/:id', AuthMdw, AuthRoleMdw([USER_TYPE.teacher, USER_TYPE.admin]), AuthRoleMdw([USER_TYPE.teacher]), async function (req, res, next) {
     try {
         let { id } = req.params;
         id = parseInt(id);
