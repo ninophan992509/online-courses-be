@@ -1,14 +1,13 @@
 {
     "required": [
-        "chapterId",
+        "lessonId",
         "link",
         "title",
-        "description",
-        "time"
+        "description"
     ],
     "additionalProperties": false,
     "properties": {
-        "chapterId": {
+        "lessonId": {
             "type": "number"
         },
         "link": {
@@ -19,9 +18,6 @@
         },
         "description": {
             "type": "string"
-        },
-        "time": {
-            "type": "number"
         }
     }
 }

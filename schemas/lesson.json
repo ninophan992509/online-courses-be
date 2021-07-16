@@ -1,13 +1,13 @@
 {
     "required": [
-        "lessonId",
+        "chapterId",
         "name",
         "number_order",
         "content"
     ],
     "additionalProperties": false,
     "properties": {
-        "lessonId": {
+        "chapterId": {
             "type": "number"
         },
         "name": {
