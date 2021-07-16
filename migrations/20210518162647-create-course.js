@@ -38,6 +38,7 @@ module.exports = {
       },
       sale: {
         type: Sequelize.FLOAT,
+        defaultValue: -1,
       },
       short_description: {
         type: Sequelize.TEXT,
