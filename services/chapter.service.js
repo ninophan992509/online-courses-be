@@ -24,11 +24,20 @@ exports.findOne = async function (whereObject) {
     });
 }
 
-exports.findAll = async function (page, limit, courseId) {
-    const whereObj = { status: STATUS.active }
-    if (courseId) {
-        whereObj.courseId = courseId;
+exports.findAll = async function (page, limit, courseId, userId) {
+    let whereObj = {};
+    
+    const course = await courseService.findOne({id: courseId});
+    if (course == null){
+        return null;
     }
+    if (course.teacherId != userId)
+    {
+        whereObj = { status: STATUS.active }
+    }
+    whereObj.courseId = courseId;
+
+
     return await Chapters.findAndCountAll({
         where: whereObj,
         limit,

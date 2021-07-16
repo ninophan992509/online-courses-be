@@ -21,6 +21,7 @@ const {
 const AuthMdw = require('../middlewares/auth.mdw');
 const ValidateMdw = require('../middlewares/validate.mdw');
 const ValidateQuery = require('../middlewares/validateGetQuery.mdw');
+const accessTokenPayloadMdw = require('../middlewares/accessTokenPayload.mdw');
 
 router.post('/',
     require('../middlewares/auth.mdw'),
@@ -367,6 +368,7 @@ router.get('/:id/feedbacks', async function (req, res, next) {
 
 router.get('/:id/chapters', async function (req, res, next) {
     try {
+        const accessTokenPayload = accessTokenPayloadMdw(req);
         let { id } = req.params;
         id = parseInt(id);
         if (isNaN(id) || id < 1) {
@@ -379,7 +381,7 @@ router.get('/:id/chapters', async function (req, res, next) {
         let { page, limit } = req.query;
         page = getPageQuery(page);
         limit = getLimitQuery(limit);
-        const result = await chapterService.findAll(page, limit, id);
+        const result = await chapterService.findAll(page, limit, id, accessTokenPayload? accessTokenPayload.userId : 0);
         res.status(200).json(new PageResponse(null, true, result, page, limit));
 
     } catch (error) {
