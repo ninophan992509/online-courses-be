@@ -96,6 +96,7 @@ exports.DeleteUser = async function(id){
         }
     });
     if (user){
-        await user.destroy();
+        user.status = USER_STATUS.deleted;
+        await user.save();
     }
 }
