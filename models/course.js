@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       tuition_fee: DataTypes.BIGINT,
       sale: DataTypes.FLOAT,
       status: DataTypes.INTEGER,
+      total_view: DataTypes.INTEGER,
       teacherId: DataTypes.INTEGER,
       createdBy: DataTypes.INTEGER,
       updatedBy: DataTypes.INTEGER,

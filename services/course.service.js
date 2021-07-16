@@ -46,6 +46,8 @@ exports.findOneNotDoneOrActive = async function (whereObject) {
             }
         ]
     });
+    result.total_view += 1;
+    await result.save();
     result.dataValues.category_name = result.category.category_name
     delete result.dataValues.category;
     result.dataValues.teacher_name = result.user.fullname;
@@ -285,6 +287,7 @@ exports.findRating = async function (courseId) {
 }
 
 exports.create = async function (course) {
+    course.total_view = 0;
     return await Courses.create(course);
 }
 
