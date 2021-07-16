@@ -1692,3 +1692,62 @@ courses/
         "data": null
     }
     ```
+
+## Users
+```
+/users
+```
+* Create teacher
+    ```
+    POST '/teacher'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Body:
+    ```
+    {
+        "email":"test.teacher@gmail.com",
+        "password":"123123",
+        "fullname":"Test Teacher"
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 9,
+            "email": "test.teacher@gmail.com",
+            "fullname": "Test Teacher",
+            "status": 1,
+            "type": "teacher",
+            "updatedAt": "2021-07-16T15:18:12.536Z",
+            "createdAt": "2021-07-16T15:18:12.536Z"
+        }
+    }
+    ```
+
+* Delete user
+    ```
+    DELETE '/:id'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": null
+    }
+    ```
+

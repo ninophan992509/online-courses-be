@@ -23,6 +23,20 @@ exports.Register = async function (user) {
     return new Response(null, true, result);
 }
 
+exports.CreateTeacher = async function (user) {
+    const userWithSameEmail = await User.findOne({ where: { email: user.email } });
+    if (userWithSameEmail != null) {
+        throw new ErrorHandler(400, "Email existed");
+    }
+    user.password = bcrypt.hashSync(user.password, 10);
+    user.status = USER_STATUS.active;
+    user.type = USER_TYPE.teacher;
+    const result = await User.create(user);
+    var val = result.dataValues;
+    delete val.password;
+    return new Response(null, true, result);
+}
+
 exports.SignIn = async function (auth) {
     var user = await User.findOne({ where: { email: auth.email } });
     if (user == null) throw new ErrorHandler(404, "Wrong email or password");
@@ -73,4 +87,15 @@ exports.CreateAccessToken = async function (token) {
         accessToken: newAccessToken
     };
     return new Response(null, true, result);
+}
+
+exports.DeleteUser = async function(id){
+    var user = await User.findOne({
+        where: {
+            id: id
+        }
+    });
+    if (user){
+        await user.destroy();
+    }
 }
