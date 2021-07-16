@@ -365,26 +365,37 @@ exports.getListHighlightCourses = async function () {
 }
 
 exports.getListMostViewsCourses = async function () {
-    const result = await db.sequelize.query(
-        `select c.* , category.category_name as category_name,teacher.fullname as teacher_name
-        from watch_lists as w 
-        inner join 
-        courses as c 
-        on w.courseId = c.id
-        inner join
-		categories as category
-        on c.categoryId = category.id
-        inner join
-        users as teacher
-        on c.teacherId = teacher.id
-        group by courseId 
-        order by count(w.courseId) desc 
-        limit 4`,
-        QueryTypes.SELECT
-    );
+    const result = await Courses.findAll({
+        where: {
+            status: {
+                [Op.or]: [STATUS.active, STATUS.notDone]
+            }
+        },
+        order: [
+            ['total_view', 'DESC']
+        ],
+        limit: LIMIT,
+        include: [
+            {
+                model: category,
+                required: false,
+                attributes: ['category_name']
+            },
+            {
+                model: Users,
+                required: false,
+                attributes: ['fullname']
+            }
+        ]
+    });
+    await result.forEach(r => {
+        r.dataValues.category_name = r.category.category_name
+        delete r.dataValues.category;
+        r.dataValues.teacher_name = r.user.fullname;
+        delete r.dataValues.user;
+    });
 
-
-    return result[0];
+    return result;
 }
 
 exports.checkEnrollCourse = async function (courseId, userId) {
