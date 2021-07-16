@@ -1013,6 +1013,55 @@ courses/
     }
     ```
 
+* Teacher get self courses
+    ```
+    GET '/my-course'
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "count": 5,
+            "rows": [
+                {
+                    "id": 1,
+                    "course_name": "Java Basic",
+                    "categoryId": 1,
+                    "picture": null,
+                    "short_description": "ipsum dolor",
+                    "description": "This is an java basic course",
+                    "number_enrolled": 1,
+                    "rating": 0,
+                    "number_rating": 0,
+                    "total_rating": 0,
+                    "tuition_fee": 2300,
+                    "sale": null,
+                    "status": -1,
+                    "teacherId": 1,
+                    "createdBy": 4,
+                    "updatedBy": null,
+                    "createdAt": "2021-06-05T08:44:00.000Z",
+                    "updatedAt": "2021-06-05T08:44:00.000Z",
+                    "category_name": "Java",
+                    "teacher_name": "Le Mau Toan"
+                },
+                ...
+            ]
+        },
+        "pageNumber": 1,
+        "pageSize": 10
+    }
+    ```
+
 ## Chapter
 * Create new chapter (admin, teacher of course):
     ```

@@ -91,7 +91,7 @@ router.get('/',
                     throw new ErrorHandler(400, "Invalid teacherId.");
                 }
             }
-
+            
             const result = await courseService.findAll(page, limit, lstCategoryId, teacherId, sort);
             res.status(200).json(new PageResponse(null, true, result, page, limit));
         } catch (error) {
@@ -176,6 +176,46 @@ router.get('/search',
             next(error);
         }
     });
+
+router.get('/my-courses',
+    AuthMdw,
+    require('../middlewares/validateGetQuery.mdw')(getQuerySchema),
+    async function (req, res, next) {
+        try {
+            let { page, limit, categoryId, sort } = req.query;
+            page = getPageQuery(page);
+            limit = getLimitQuery(limit);
+
+            let lstCategoryId = [];
+
+            if (categoryId) {
+                categoryId = parseInt(categoryId);
+                if (isNaN(categoryId) || categoryId < 1) {
+                    throw new ErrorHandler(400, "Invalid categoryId.");
+                }
+                const category = await categoryService.findOne({ id: categoryId });
+                if (!category) {
+                    throw new ErrorHandler(400, "Category is not exist.");
+                }
+                if (category.parentId) {
+                    lstCategoryId.push(categoryId);
+                } else {
+                    if (category.categories.length === 0) {
+                        lstCategoryId.push(category.id);
+                    }
+                    category.categories.forEach(item => {
+                        lstCategoryId.push(item.id);
+                    });
+                }
+            }
+            let teacherId = req.accessTokenPayload.userId;
+            const result = await courseService.findAllWithPrivateCourses(page, limit, lstCategoryId, teacherId, sort);
+            res.status(200).json(new PageResponse(null, true, result, page, limit));
+        } catch (error) {
+            next(error);
+        }
+    }
+);
 
 router.get('/:id', async function (req, res, next) {
     try {

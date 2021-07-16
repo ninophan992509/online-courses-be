@@ -132,7 +132,7 @@ exports.findMostEnrolled = async function () {
 }
 
 exports.findAll = async function (page, limit, lstCategoryId, teacherId, sort) {
-    const whereObj = { status: { [Op.or]: [STATUS.active, STATUS.notDone] } }
+    let whereObj = { status: { [Op.or]: [STATUS.active, STATUS.notDone] } };
     if (lstCategoryId.length > 0) {
         whereObj.categoryId = { [Op.or]: lstCategoryId };
     }
@@ -199,6 +199,51 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId, sort) {
             x.isHighlight = false;
         }
     }
+
+    await result.rows.forEach(r => {
+        r.dataValues.category_name = r.category.category_name
+        delete r.dataValues.category;
+        r.dataValues.teacher_name = r.user.fullname;
+        delete r.dataValues.user;
+    });
+
+    return result;
+}
+
+exports.findAllWithPrivateCourses = async function (page, limit, lstCategoryId, teacherId, sort) {
+    let whereObj = {};
+    if (lstCategoryId.length > 0) {
+        whereObj.categoryId = { [Op.or]: lstCategoryId };
+    }
+    whereObj.teacherId = teacherId;
+    let orderObj = [];
+    if (sort != undefined){
+        if (sort == "rating"){
+            orderObj = [['rating', 'DESC']];
+        }else{
+            orderObj = [['tuition_fee']];
+        }
+    }
+    
+    const result = await Courses.findAndCountAll({
+        where: whereObj,
+        limit,
+        offset: (page - 1) * limit,
+        include: [
+            {
+                model: category,
+                required: false,
+                attributes: ['category_name'],
+                as: 'category'
+            },
+            {
+                model: Users,
+                required: false,
+                attributes: ['fullname'],
+            }
+        ],
+        order: orderObj
+    });
 
     await result.rows.forEach(r => {
         r.dataValues.category_name = r.category.category_name
