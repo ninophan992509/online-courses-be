@@ -27,7 +27,9 @@ exports.findOne = async function (whereObject) {
 }
 
 exports.findAll = async function (page, limit, courseId, userId) {
-    let whereObj = {};
+    let whereObj = {
+        status: STATUS.active
+    };
     
     const course = await courseService.findOne({id: courseId});
     if (course == null){
@@ -35,7 +37,11 @@ exports.findAll = async function (page, limit, courseId, userId) {
     }
     if (course.teacherId != userId)
     {
-        whereObj = { status: STATUS.active }
+        whereObj = {
+             status: {
+                [Op.or]: [STATUS.active, STATUS.notDone]
+             }
+        }
     }
     whereObj.courseId = courseId;
 
