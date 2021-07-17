@@ -8,7 +8,7 @@ const userTypeEnum = require('../enums/user-type.enum');
 const validateMdw = require('../middlewares/validate.mdw');
 const { Response } = require('../response/response');
 
-router.post('/teacher', AuthMdw, AuthRoleMdw([userTypeEnum.admin]),validateMdw(userSchema), async function (req, res, next) {
+router.post('/teacher', AuthMdw, AuthRoleMdw([userTypeEnum.admin]), validateMdw(userSchema), async function (req, res, next) {
   try {
     const teacher = req.body;
     const result = await userService.CreateTeacher(teacher);
@@ -23,13 +23,24 @@ router.delete('/:id', AuthMdw, AuthRoleMdw([userTypeEnum.admin]), async function
     let { id } = req.params;
     id = parseInt(id);
     if (isNaN(id) || id < 1) {
-        throw new ErrorHandler(400, "Invalid Id.");
+      throw new ErrorHandler(400, "Invalid Id.");
     }
     await userService.DeleteUser(id);
-    res.status(200).json(new Response(null,true,null));
+    res.status(200).json(new Response(null, true, null));
   } catch (error) {
     next(error);
   }
 });
 
+router.put('', AuthMdw, async function (req, res, next) {
+  try {
+    let id = req.accessTokenPayload.userId;
+    let user = req.body;
+    user.id = id;
+    const result = await userService.UpdateUser(user);
+    res.status(200).json(new Response(null, true, result));
+  } catch (error) {
+    next(error);
+  }
+})
 module.exports = router;

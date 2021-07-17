@@ -63,6 +63,8 @@ exports.SignIn = async function (auth) {
     delete userInfo.refreshtoken;
     delete userInfo.createdAt;
     delete userInfo.updatedAt;
+    delete userInfo.otp;
+    delete userInfo.confirm;
     const result = {
         userInfo,
         accessToken,
@@ -114,4 +116,31 @@ exports.ConfirmAccount = async function(email, otp){
     user.confirm = 1;
     user.otp = 0;
     await user.save();
+}
+
+exports.UpdateUser = async function(user){
+    var entity = await User.findOne({
+        where: { 
+            id: user.id
+        }
+    });
+    if (user.fullname != null){
+        entity.fullname = user.fullname;
+    }
+    if (user.password != null){
+        if (user.repassword == null || user.repassword != user.password){
+            throw new ErrorHandler(400, "Bad data");
+        }
+        entity.password = bcrypt.hashSync(user.password, 10);
+    }
+
+    await entity.save();
+    const userInfo = entity.toJSON();
+    delete userInfo.password;
+    delete userInfo.refreshtoken;
+    delete userInfo.createdAt;
+    delete userInfo.updatedAt;
+    delete userInfo.otp;
+    delete userInfo.confirm;
+    return new Response(null, true, userInfo);
 }
