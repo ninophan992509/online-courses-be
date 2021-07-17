@@ -5,8 +5,8 @@ const Videos = require('../models/video')(db.sequelize, db.Sequelize.DataTypes);
 const Lessons = require('../models/lesson')(db.sequelize, db.Sequelize.DataTypes);
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
-const { QueryTypes } = require('sequelize');
 const courseService = require('./course.service');
+const { Op, QueryTypes} = require('sequelize');
 
 // Chapters.hasMany(Documents, { foreignKey: 'chapterId' });
 // Chapters.hasMany(Videos, { foreignKey: 'chapterId' });
@@ -30,6 +30,7 @@ exports.findAll = async function (page, limit, courseId, userId) {
     let whereObj = {
         status: STATUS.active
     };
+    let permisson = false;
     
     const course = await courseService.findOne({id: courseId});
     if (course == null){
@@ -41,8 +42,11 @@ exports.findAll = async function (page, limit, courseId, userId) {
              status: {
                 [Op.or]: [STATUS.active, STATUS.notDone]
              }
-        }
+        };
+    }else{
+        permisson = true;
     }
+    
     whereObj.courseId = courseId;
 
 
