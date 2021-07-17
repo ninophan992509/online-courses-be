@@ -6,6 +6,7 @@ const Lessons = require('../models/lesson')(db.sequelize, db.Sequelize.DataTypes
 const Courses = require('../models/course')(db.sequelize, db.Sequelize.DataTypes);
 const STATUS = require('../enums/status.enum');
 const courseService = require('./course.service');
+const enrollCourse = require('./enroll-list.service');
 const { Op, QueryTypes} = require('sequelize');
 
 // Chapters.hasMany(Documents, { foreignKey: 'chapterId' });
@@ -46,11 +47,14 @@ exports.findAll = async function (page, limit, courseId, userId) {
     }else{
         permisson = true;
     }
-    
+    try{
+        await enrollCourse.GetEnrollCourseInfo(courseId, userId);
+        permisson = true;
+    }catch(e){}
+
     whereObj.courseId = courseId;
 
-
-    return await Chapters.findAndCountAll({
+    let result = await Chapters.findAndCountAll({
         where: whereObj,
         limit,
         offset: (page - 1) * limit,
@@ -68,6 +72,18 @@ exports.findAll = async function (page, limit, courseId, userId) {
             }
         ]
     });
+
+    if (!permisson){
+        result.rows.forEach(async element => {
+            if (element.is_previewed != 1){
+                await element.lessons.forEach(lesson =>{
+                    lesson.dataValues.video = null;
+                })
+            }
+        });
+    }
+
+    return result;
 }
 
 exports.create = async function (entity) {
