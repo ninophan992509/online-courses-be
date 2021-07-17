@@ -150,7 +150,7 @@ router.delete('/:id',
             }
 
             if (payload.type !== USER_TYPE.admin &&
-                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.course.teacherId)) {
                 throw new ErrorHandler(403, "Permission denied.");
             }
 

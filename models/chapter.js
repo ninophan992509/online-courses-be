@@ -15,8 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   );
   chapter.associate = function (models) {
     // associations can be defined here
-    chapter.belongsTo(models.user);
+    chapter.belongsTo(models.user, {foreignKey: 'createdBy'});
     chapter.belongsTo(models.course);
+    chapter.hasMany(models.lesson, {foreignKey: 'chapterId'});
   };
   return chapter;
 };
