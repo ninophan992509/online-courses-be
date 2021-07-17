@@ -1,9 +1,7 @@
 {
     "required": [
         "lessonId",
-        "link",
-        "title",
-        "description"
+        "link"
     ],
     "additionalProperties": false,
     "properties": {
