@@ -36,13 +36,7 @@ localhost:3000/api/
         "message": null,
         "code": true,
         "data": {
-            "id": 4,
-            "email": "lmtoan@email.com",
-            "fullname": "Le Mau Toan",
-            "status": 1,
-            "type": "student",
-            "updatedAt": "2021-06-05T15:55:11.089Z",
-            "createdAt": "2021-06-05T15:55:11.089Z"
+            "message": "Register successfully, please check email to confirm account."
         }
     }
 
@@ -90,6 +84,13 @@ localhost:3000/api/
         "code": false,
         "data": null
     }
+
+    403 Fobiden:
+    {
+        "message": "User not confirm, please check email and confirm account.",
+        "code": false,
+        "data": null
+    }
     ```
 
 * Refresh AccessToken: lmtoan
@@ -124,6 +125,34 @@ localhost:3000/api/
     400 Bad Request:
     {
         "message": "Invalid refresh token",
+        "code": false,
+        "data": null
+    }
+    ```
+
+* Confirm account
+    ```
+    POST '/confirm'
+    ```
+    Body:
+    ```
+    {
+        "email":"toanmadrid99@gmail.com",
+        "otp":118156
+    }
+    ```
+    Response:
+    ```
+    200 OK:
+    {
+        "message": null,
+        "code": true,
+        "data": null
+    }
+
+    400 Bad Request:
+    {
+        "message": "Bad data",
         "code": false,
         "data": null
     }
