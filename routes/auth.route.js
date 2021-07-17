@@ -3,6 +3,7 @@ const router = express.Router();
 const userSchema = require('../schemas/user.json');
 const AuthSchema = require('../schemas/auth.json');
 const rfTokenSchema = require('../schemas/refreshtoken.json');
+const confirmAccountSchema = require('../schemas/confirm-account.json');
 const userService = require('../services/user.service');
 const AuthMdw = require('../middlewares/auth.mdw');
 const AuthRoleMdw = require('../middlewares/auth.roles.mdw');
@@ -34,6 +35,15 @@ router.post('/refresh-token', require('../middlewares/validate.mdw')(rfTokenSche
     const token = req.body;
     const result = await userService.CreateAccessToken(token);
     res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/confirm',require('../middlewares/validate.mdw')(confirmAccountSchema), async function (req, res, next) {
+  try {
+    const result = await userService.ConfirmAccount(req.body.email, req.body.otp);
+    res.status(200).json(new Response(null, true, null));
   } catch (error) {
     next(error);
   }

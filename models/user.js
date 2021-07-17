@@ -34,6 +34,12 @@ module.exports = (sequelize, DataTypes) => {
       refreshtoken: {
         type: DataTypes.STRING,
       },
+      confirm: {
+        type: DataTypes.INTEGER,
+      },
+      otp: {
+        type: DataTypes.INTEGER,
+      }
     },
     {
       sequelize,

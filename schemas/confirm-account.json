@@ -1,0 +1,15 @@
+{
+    "required": [
+        "email",
+        "otp"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "email": {
+            "type": "string"
+        },
+        "otp": {
+            "type": "number"
+        }
+    }
+}

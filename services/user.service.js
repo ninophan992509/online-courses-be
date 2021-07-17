@@ -8,6 +8,8 @@ const User = require('../models/user')(db.sequelize, db.Sequelize.DataTypes);
 const USER_TYPE = require('../enums/user-type.enum');
 const USER_STATUS = require('../enums/user-status.enum');
 const Response = require('../response/response').Response;
+const MailService = require('./mail.service');
+const random = require('random');
 
 exports.Register = async function (user) {
     const userWithSameEmail = await User.findOne({ where: { email: user.email } });
@@ -17,10 +19,11 @@ exports.Register = async function (user) {
     user.password = bcrypt.hashSync(user.password, 10);
     user.status = USER_STATUS.active;
     user.type = USER_TYPE.student;
-    const result = await User.create(user);
-    var val = result.dataValues;
-    delete val.password;
-    return new Response(null, true, result);
+    user.confirm = 0;
+    user.otp = random.int((min = 100000), (max = 999999));
+    await User.create(user);
+    await MailService.SendEmailRegisterConfirmation(user.email,user.otp);
+    return new Response(null, true, {message: "Register successfully, please check email to confirm account."});
 }
 
 exports.CreateTeacher = async function (user) {
@@ -41,7 +44,9 @@ exports.SignIn = async function (auth) {
     var user = await User.findOne({ where: { email: auth.email } });
     if (user == null) throw new ErrorHandler(404, "Wrong email or password");
     if (!bcrypt.compareSync(auth.password, user.password)) throw new ErrorHandler(404, "Wrong email or password");
-
+    if (!user.confirm){
+        throw new ErrorHandler(403, "User not confirm, please check email and confirm account.");
+    }
     const payload = {
         userId: user.id,
         type: user.type
@@ -99,4 +104,14 @@ exports.DeleteUser = async function(id){
         user.status = USER_STATUS.deleted;
         await user.save();
     }
+}
+
+exports.ConfirmAccount = async function(email, otp){
+    const user = await User.findOne({ where: { email: email } });
+    if (user == null || user.confirm || user.otp != otp){
+        throw new ErrorHandler(400, "Bad data");
+    }
+    user.confirm = 1;
+    user.otp = 0;
+    await user.save();
 }

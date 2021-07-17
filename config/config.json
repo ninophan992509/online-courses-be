@@ -15,5 +15,9 @@
       }
     }
   },
-  "SECRET_KEY": "tHisIsAscReTkEy"
+  "SECRET_KEY": "tHisIsAscReTkEy",
+  "mailsetting":{
+    "email": "noreply.lmtoan@gmail.com",
+    "password": "0916479721"
+  }
 }
