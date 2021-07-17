@@ -101,14 +101,14 @@ router.put('/',
 
             const entity = req.body;
 
-            const dbEntity = await chapterService.findOne({ id: entity.id, status: STATUS.active });
+            const dbEntity = await chapterService.findRelated({ id: entity.id, status: STATUS.active });
 
             if (!dbEntity) {
                 throw new ErrorHandler(404, "Chapter is not existed.");
             }
 
             if (payload.type !== USER_TYPE.admin &&
-                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.teacherId)) {
+                (payload.type !== USER_TYPE.teacher || currentUser.userId !== dbEntity.course.teacherId)) {
                 throw new ErrorHandler(403, "Permission denied.");
             }
 
