@@ -13,7 +13,7 @@ const courseService = require('./course.service');
 // Documents.belongsTo(Chapters, { foreignKey: 'chapterId' });
 // Videos.belongsTo(Chapters, { foreignKey: 'chapterId' });
 
-Lessons.belongsTo(Chapters, {foreignKey: 'chapterId'});
+Lessons.associate(db);
 Chapters.associate(db);
 /**
  * 
@@ -54,7 +54,13 @@ exports.findAll = async function (page, limit, courseId, userId) {
         include: [
             {
                 model: Lessons,
-                required: false
+                required: false,
+                include: [
+                    {
+                        model: Videos,
+                        required: false
+                    }
+                ]
             }
         ]
     });

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       lesson.hasOne(models.video,{foreignKey: 'lessonId'});
       lesson.hasMany(models.document,{foreignKey: 'lessonId'})
-    }
+      lesson.belongsTo(models.chapter, {foreignKey: 'chapterId'});}
   };
   lesson.init({
     chapterId: DataTypes.INTEGER,
