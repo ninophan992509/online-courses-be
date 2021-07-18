@@ -49,3 +49,10 @@ exports.create = async function (entity) {
 exports.update = async function (dbEntity, updateEntity) {
     return await dbEntity.update(updateEntity);
 }
+
+exports.findOneActive = async function(whereObj){
+    whereObj.status = STATUS.active;
+    return await Feedbacks.findOne({
+        where: whereObj
+    });
+}

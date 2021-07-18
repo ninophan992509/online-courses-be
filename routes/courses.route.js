@@ -366,6 +366,25 @@ router.get('/:id/feedbacks', async function (req, res, next) {
     }
 });
 
+router.get('/:id/my-feedback', AuthMdw, async function (req, res, next) {
+    try {
+        let { id } = req.params;
+        id = parseInt(id);
+        if (isNaN(id) || id < 1) {
+            throw new ErrorHandler(400, "Invalid Id.");
+        }
+        let userId = req.accessTokenPayload.userId;
+        const result = await feedbackService.findOneActive({
+            createdBy: userId,
+            courseId: id
+        });
+        res.status(200).json(new Response(null, true, result));
+
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/:id/chapters', async function (req, res, next) {
     try {
         const accessTokenPayload = accessTokenPayloadMdw(req);
