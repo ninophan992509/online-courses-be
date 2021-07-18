@@ -40,7 +40,7 @@ router.post('/refresh-token', require('../middlewares/validate.mdw')(rfTokenSche
   }
 });
 
-router.post('/confirm',require('../middlewares/validate.mdw')(confirmAccountSchema), async function (req, res, next) {
+router.post('/confirm', require('../middlewares/validate.mdw')(confirmAccountSchema), async function (req, res, next) {
   try {
     const result = await userService.ConfirmAccount(req.body.email, req.body.otp);
     res.status(200).json(new Response(null, true, null));
