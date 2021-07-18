@@ -144,3 +144,22 @@ exports.UpdateUser = async function(user){
     delete userInfo.confirm;
     return new Response(null, true, userInfo);
 }
+
+exports.getUserInfo = async function(id){
+    var user = await User.findOne({
+        where: { 
+            id: id
+        }
+    });
+    if (user == null){
+        throw new ErrorHandler(404, "Id not found");
+    }
+    const userInfo = user.toJSON();
+    delete userInfo.password;
+    delete userInfo.refreshtoken;
+    delete userInfo.createdAt;
+    delete userInfo.updatedAt;
+    delete userInfo.otp;
+    delete userInfo.confirm;
+    return new Response(null, true, userInfo);
+}
