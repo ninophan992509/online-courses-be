@@ -20,7 +20,13 @@ var mailOptions = {
 exports.SendEmailRegisterConfirmation = async function(email, otp){
     let confirmLink = CreateConfirmationLink(email, otp);
     let subject = "Register Confirmation";
-    let html = `<div>Hello ${email},<br/>You have registered an account in ${host}. To confirm this account, please click on the link <a href='https://${confirmLink.toString()}'>CONFIRM_ACCOUNT</a><br/>Or use the OTP <span style="background-color: gray; padding: 5px; border-radius: 4px">${otp}</span></div>`;
+    let html = `
+    <div>Hello ${email},<br/>
+      You have registered an account in ${host}. To confirm this account, please use the OTP:<br/>
+      <div class="container">
+      <h2 style="background-color: gainsboro; padding:8px 16px; border-radius: 8px; margin: 0 auto; width: fit-content;">${otp}</h2>
+      </div>
+    </div>`;
     mailOptions.to = email;
     mailOptions.subject = subject;
     mailOptions.html = html;
