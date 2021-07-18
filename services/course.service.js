@@ -213,7 +213,9 @@ exports.findAll = async function (page, limit, lstCategoryId, teacherId, sort) {
 }
 
 exports.findAllWithPrivateCourses = async function (page, limit, lstCategoryId, teacherId, sort) {
-    let whereObj = {};
+    let whereObj = {
+        status: { [Op.or]: [STATUS.active, STATUS.notDone] }
+    };
     if (lstCategoryId.length > 0) {
         whereObj.categoryId = { [Op.or]: lstCategoryId };
     }
