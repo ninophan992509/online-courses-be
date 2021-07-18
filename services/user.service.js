@@ -22,8 +22,8 @@ exports.Register = async function (user) {
     user.confirm = 0;
     user.otp = random.int((min = 100000), (max = 999999));
     await User.create(user);
-    await MailService.SendEmailRegisterConfirmation(user.email,user.otp);
-    return new Response(null, true, {message: "Register successfully, please check email to confirm account."});
+    await MailService.SendEmailRegisterConfirmation(user.email, user.otp);
+    return new Response(null, true, { message: "Register successfully, please check email to confirm account." });
 }
 
 exports.CreateTeacher = async function (user) {
@@ -44,7 +44,7 @@ exports.SignIn = async function (auth) {
     var user = await User.findOne({ where: { email: auth.email } });
     if (user == null) throw new ErrorHandler(404, "Wrong email or password");
     if (!bcrypt.compareSync(auth.password, user.password)) throw new ErrorHandler(404, "Wrong email or password");
-    if (!user.confirm){
+    if (!user.confirm) {
         throw new ErrorHandler(403, "User not confirm, please check email and confirm account.");
     }
     const payload = {
@@ -52,19 +52,18 @@ exports.SignIn = async function (auth) {
         type: user.type
     };
     const opts = {
-        expiresIn: 60*60*1000
+        expiresIn: 60 * 60 * 1000
     }
     var accessToken = jwt.sign(payload, SECRET_KEY, opts);
     var rfToken = randomstring.generate(100);
     user.refreshtoken = rfToken;
     await user.save();
-    const userInfo = user.toJSON();
-    delete userInfo.password;
-    delete userInfo.refreshtoken;
-    delete userInfo.createdAt;
-    delete userInfo.updatedAt;
-    delete userInfo.otp;
-    delete userInfo.confirm;
+    let userInfo = {};
+    userInfo.id = user.id;
+    userInfo.email = user.email;
+    userInfo.fullname = user.fullname;
+    userInfo.type = user.type;
+    userInfo.status = user.status;
     const result = {
         userInfo,
         accessToken,
@@ -87,7 +86,7 @@ exports.CreateAccessToken = async function (token) {
     delete payload.exp;
 
     const opts = {
-        expiresIn: 60*60*1000
+        expiresIn: 60 * 60 * 1000
     }
     var newAccessToken = jwt.sign(payload, SECRET_KEY, opts);
     const result = {
@@ -96,21 +95,21 @@ exports.CreateAccessToken = async function (token) {
     return new Response(null, true, result);
 }
 
-exports.DeleteUser = async function(id){
+exports.DeleteUser = async function (id) {
     var user = await User.findOne({
         where: {
             id: id
         }
     });
-    if (user){
+    if (user) {
         user.status = USER_STATUS.deleted;
         await user.save();
     }
 }
 
-exports.ConfirmAccount = async function(email, otp){
+exports.ConfirmAccount = async function (email, otp) {
     const user = await User.findOne({ where: { email: email } });
-    if (user == null || user.confirm || user.otp != otp){
+    if (user == null || user.confirm || user.otp != otp) {
         throw new ErrorHandler(400, "Bad data");
     }
     user.confirm = 1;
@@ -118,48 +117,54 @@ exports.ConfirmAccount = async function(email, otp){
     await user.save();
 }
 
-exports.UpdateUser = async function(user){
+exports.UpdateUser = async function (user) {
     var entity = await User.findOne({
-        where: { 
+        where: {
             id: user.id
         }
     });
-    if (user.fullname != null){
+    if (user.fullname != null) {
         entity.fullname = user.fullname;
     }
-    if (user.password != null){
-        if (user.repassword == null || user.repassword != user.password){
+    if (user.password != null) {
+        if (user.repassword == null || user.repassword != user.password) {
             throw new ErrorHandler(400, "Bad data");
         }
         entity.password = bcrypt.hashSync(user.password, 10);
     }
 
     await entity.save();
-    const userInfo = entity.toJSON();
-    delete userInfo.password;
-    delete userInfo.refreshtoken;
-    delete userInfo.createdAt;
-    delete userInfo.updatedAt;
-    delete userInfo.otp;
-    delete userInfo.confirm;
+    let userInfo = {};
+    userInfo.id = entity.id;
+    userInfo.email = entity.email;
+    userInfo.fullname = entity.fullname;
+    userInfo.type = entity.type;
+    userInfo.status = entity.status;
     return new Response(null, true, userInfo);
 }
 
-exports.getUserInfo = async function(id){
+exports.getUserInfo = async function (id) {
     var user = await User.findOne({
-        where: { 
+        where: {
             id: id
-        }
+        },
+        attributes: ['id', 'email', 'fullname', 'type', 'status']
     });
-    if (user == null){
+    if (user == null) {
         throw new ErrorHandler(404, "Id not found");
     }
-    const userInfo = user.toJSON();
-    delete userInfo.password;
-    delete userInfo.refreshtoken;
-    delete userInfo.createdAt;
-    delete userInfo.updatedAt;
-    delete userInfo.otp;
-    delete userInfo.confirm;
-    return new Response(null, true, userInfo);
+    return new Response(null, true, user);
+}
+
+exports.getListUserByType = async function (type, page, limit) {
+    var result = await User.findAndCountAll({
+        where: {
+            type: type
+        },
+        attributes: ['id', 'email', 'fullname', 'type', 'status'],
+        order: [['createdAt', 'DESC']],
+        limit: limit,
+        offset: (page - 1) * limit
+    });
+    return result;
 }

@@ -6,7 +6,12 @@ const AuthMdw = require('../middlewares/auth.mdw');
 const AuthRoleMdw = require('../middlewares/auth.roles.mdw');
 const userTypeEnum = require('../enums/user-type.enum');
 const validateMdw = require('../middlewares/validate.mdw');
-const { Response } = require('../response/response');
+const { Response, PageResponse } = require('../response/response');
+const {
+  getPutSchema,
+  getLimitQuery,
+  getPageQuery,
+} = require('../utils');
 
 router.post('/teacher', AuthMdw, AuthRoleMdw([userTypeEnum.admin]), validateMdw(userSchema), async function (req, res, next) {
   try {
@@ -58,4 +63,15 @@ router.get('/:id', async function (req, res, next) {
   }
 })
 
+router.get('', AuthMdw, AuthRoleMdw([userTypeEnum.admin]), async function (req, res, next) {
+  try {
+    let { page, limit, type } = req.query;
+    page = getPageQuery(page);
+    limit = getLimitQuery(limit);
+    const result = await userService.getListUserByType(type, page, limit);
+    res.status(200).json(new PageResponse(null, true, result, page, limit));
+  } catch (error) {
+    next(error);
+  }
+})
 module.exports = router;

@@ -1817,3 +1817,55 @@ courses/
     }
     ```
 
+* Get list users info
+    ```
+    GET ''
+    ```
+    Query
+
+    * `page` (number): page number (default: 1)
+    * `limit` (number): number of course per page (default: 10)
+    * `type` (string) [`student` or `teacher`]
+    ```
+    Headers:
+    ```
+    {
+        x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNjIyOTA3MTY2LCJleHAiOjE2MjY1MDcxNjZ9.MpH_R4P_O7-i1GEG5i-G-xkVXIpDHJTCkxqGlZFffO4
+    }
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": [
+            {
+                "id": 13,
+                "email": "toanmadrid99@gmail.com",
+                "fullname": "Lê Mậu Toàn",
+                "type": "student",
+                "status": 1
+            },
+            ...
+        ]
+    }
+    ```
+
+* Get user info
+    ```
+    GET ':id'
+    ```
+    Response:
+    ```
+    {
+        "message": null,
+        "code": true,
+        "data": {
+            "id": 13,
+            "email": "toanmadrid99@gmail.com",
+            "fullname": "Lê Mậu Toàn",
+            "type": "student",
+            "status": 1
+        }
+    }
+    ```
