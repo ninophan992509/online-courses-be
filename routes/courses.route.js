@@ -321,8 +321,14 @@ router.post('/:id/enroll', AuthMdw, async function (req, res, next) {
         let { id } = req.params;
         id = parseInt(id);
         if (isNaN(id) || id < 0) throw new ErrorHandler(400, "Id NaN.");
+        let course = await courseService.findOne({id: id});
+        if (course == null){
+            throw new ErrorHandler(404, "CourseId not found");
+        }
         let userId = req.accessTokenPayload.userId;
         const result = await enrollListsService.EnrollCourses(id, userId);
+        courseService.updateEnrolled(course);
+        categoryService.updateEnrolled(course.categoryId);
         res.status(200).json(new Response(null, true, result));
     } catch (error) {
         next(error);
