@@ -56,9 +56,9 @@ exports.findAll = async function (page, limit, courseId, userId) {
 
     let result = await Chapters.findAndCountAll({
         where: whereObj,
-        limit,
-        offset: (page - 1) * limit,
         order: [['createdAt', 'ASC']],
+        limit: limit,
+        offset: (page - 1) * limit,
         include: [
             {
                 model: Lessons,
@@ -72,6 +72,11 @@ exports.findAll = async function (page, limit, courseId, userId) {
             }
         ]
     });
+
+    let count = await Chapters.count({
+        where: whereObj
+    });
+    result.count = count;
 
     if (!permisson){
         result.rows.forEach(async element => {
