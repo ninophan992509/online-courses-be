@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "admin",
-    "database": "online-course",
-    "password": "nhunguyenaA",
-    "host": "online-course-singapore-db.c2yslmnu5obk.ap-southeast-1.rds.amazonaws.com",
+    "database": "online-courses",
+    "password": "nhunguyen123",
+    "host": "database-1.c2yslmnu5obk.ap-southeast-1.rds.amazonaws.com",
     "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
@@ -16,7 +16,7 @@
     }
   },
   "SECRET_KEY": "tHisIsAscReTkEy",
-  "mailsetting":{
+  "mailsetting": {
     "email": "noreply.lmtoan@gmail.com",
     "password": "0916479721"
   }
